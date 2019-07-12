@@ -1,18 +1,27 @@
-import requests
 import os
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
-print("started")
-with requests.Session() as c:
+## Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
+firefoxProfile = FirefoxProfile()
+#firefoxProfile.set_preference('permissions.default.stylesheet', 2)
+firefoxProfile.set_preference('permissions.default.image', 2)
+firefoxProfile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 
-    # Queen's requires login to view classes (wtf)
-    username = os.environ['QUEENS_USERNAME']
-    password = os.environ['QUEENS_PASSWORD']
-    login_data = dict(j_username=username, j_password=password)
+browser = webdriver.Firefox(firefoxProfile)
+browser.get("https://my.queensu.ca/")
 
-    url = "https://my.queensu.ca"
-    page = c.post(url, continue_data)
-    print(page.content)
+wait = WebDriverWait(browser, 10)
+wait.until(EC.presence_of_element_located((By.ID, 'username')))
 
-    #c.post(login_url, data=login_data)
+element = browser.find_element_by_id('username')
+element.send_keys(os.environ['QUEENS_USERNAME'])
+element = browser.find_element_by_id('password')
+element.send_keys(os.environ['QUEENS_PASSWORD'])
+element = browser.find_element_by_name('_eventId_proceed')
+element.click()
 
-print("ended")
+browser.get("https://saself.ps.queensu.ca/psp/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.SSS_STUDENT_CENTER.GBL")
