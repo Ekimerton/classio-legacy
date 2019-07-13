@@ -6,12 +6,15 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 
+start = int(input("Enter the last number that was parsed: "))
 ## Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
 firefoxProfile = FirefoxProfile()
 #firefoxProfile.set_preference('permissions.default.stylesheet', 2)
 firefoxProfile.set_preference('permissions.default.image', 2)
 firefoxProfile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 browser = webdriver.Firefox(firefoxProfile)
+
+
 
 # Login Stuff
 browser.get("https://my.queensu.ca/")
@@ -24,20 +27,21 @@ element.send_keys(os.environ['QUEENS_PASSWORD'])
 element = browser.find_element_by_name('_eventId_proceed')
 element.click()
 
-# Goes to course catalog
-browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
-wait = WebDriverWait(browser, 10)
+# Goes to course search
+for i in range(start, 136):
 
-# Fall
-element = wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_STRM$35$')))
-for option in element.find_elements_by_tag_name('option'):
-    if option.text == '2019 Fall':
-        option.click()
-        break
+    browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
+    wait = WebDriverWait(browser, 10)
 
-time.sleep(5)
+    # Fall
+    element = wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_STRM$35$')))
+    for option in element.find_elements_by_tag_name('option'):
+        if option.text == '2019 Fall':
+            option.click()
+            break
 
-for i in range(1, 136):
+    time.sleep(5)
+
     # Set subject type
     element = browser.find_element_by_id('SSR_CLSRCH_WRK_SUBJECT_SRCH$0')
     count = 0
@@ -63,16 +67,17 @@ for i in range(1, 136):
     element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH')
     element.click()
 
+    # TODO: REPLACE THIS
     time.sleep(5)
 
-    # TODO: See if the submit click returns a "not found", continue for loop in that case
     if ("The search returns no results that match the criteria specified." in browser.page_source):
-        print(i)
+        print(i, "returned no results")
         continue
     else:
-        element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_NEW_SEARCH')
-        element.click()
-        time.sleep(5)
-
+        for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
+            title = classDiv.find_element_by_tag_name('a')
+            print(title.get_attribute('title'))
+        print(i, "html read")
+        continue
 
     #print(browser.page_source)
