@@ -37,25 +37,42 @@ for option in element.find_elements_by_tag_name('option'):
 
 time.sleep(5)
 
-# Set search options
-element = browser.find_element_by_id('SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1')
-element.send_keys("c")
+for i in range(1, 136):
+    # Set subject type
+    element = browser.find_element_by_id('SSR_CLSRCH_WRK_SUBJECT_SRCH$0')
+    count = 0
+    for option in element.find_elements_by_tag_name('option'):
+        if count == i:
+            option.click()
 
-element = browser.find_element_by_id('SSR_CLSRCH_WRK_ACAD_CAREER$2')
-for option in element.find_elements_by_tag_name('option'):
-    if option.text == 'Undergraduate':
-        option.click()
-        break
+        count+=1
 
-element = browser.find_element_by_id('SSR_CLSRCH_WRK_CAMPUS$3')
-element.send_keys("m")
+    # Set search options
+    element = browser.find_element_by_id('SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1')
+    element.send_keys("c")
+    element = browser.find_element_by_id('SSR_CLSRCH_WRK_ACAD_CAREER$2')
+    for option in element.find_elements_by_tag_name('option'):
+        if option.text == 'Undergraduate':
+            option.click()
+            break
 
-element = browser.find_element_by_id('SSR_CLSRCH_WRK_INSTRUCTION_MODE$4')
-element.send_keys("i")
+    element = browser.find_element_by_id('SSR_CLSRCH_WRK_CAMPUS$3')
+    element.send_keys("m")
+    element = browser.find_element_by_id('SSR_CLSRCH_WRK_INSTRUCTION_MODE$4')
+    element.send_keys("i")
+    element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH')
+    element.click()
+
+    time.sleep(5)
+
+    # TODO: See if the submit click returns a "not found", continue for loop in that case
+    if ("The search returns no results that match the criteria specified." in browser.page_source):
+        print(i)
+        continue
+    else:
+        element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_NEW_SEARCH')
+        element.click()
+        time.sleep(5)
 
 
-
-element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH')
-#element.click()
-time.sleep(5)
-#print(browser.page_source)
+    #print(browser.page_source)
