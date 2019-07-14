@@ -5,16 +5,46 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+import sqlite3
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
+from sqlalchemy.ext.declarative import declarative_base
 
 start = int(input("Enter the last number that was parsed: "))
+
+Base = declarative_base()
+engine = create_engine('sqlite:///queens.db')
+
+class Course(Base):
+    __tablename__ = "queens_courses"
+    id = Column('id', Integer, primary_key=True)
+    name = Column('name', String, unique=True)
+    constant_times = Column('constant_times', Text, unique=False)
+    variable_times = Column('variable_times', Text, unique=False)
+
+def hour12to24(timestamp):
+    ep_index = timestamp.index(":")
+    hour = int(timestamp[:ep_index])
+    minute = timestamp[ep_index + 1:ep_index + 3]
+    am_pm = timestamp[ep_index + 3:ep_index + 5]
+    if am_pm == "PM":
+        hour = str(hour + 12)
+    if am_pm == "AM" and hour < 10:
+        hour = "0" + str(hour)
+    return str(hour) + minute
+
+def standardizeTime(init_time):
+    stnd_time = ""
+    bits = init_time.split(", ")
+    for bit in bits:
+        stnd_time = stnd_time + bit[:2] + hour12to24(bit[3: bit.index('-')]) + hour12to24(bit[bit.index('-') + 2:]) + ","
+    return stnd_time[:len(stnd_time)-1]
+
 ## Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
 firefoxProfile = FirefoxProfile()
 #firefoxProfile.set_preference('permissions.default.stylesheet', 2)
 firefoxProfile.set_preference('permissions.default.image', 2)
 firefoxProfile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 browser = webdriver.Firefox(firefoxProfile)
-
-
 
 # Login Stuff
 browser.get("https://my.queensu.ca/")
@@ -74,10 +104,35 @@ for i in range(start, 136):
         print(i, "returned no results")
         continue
     else:
-        for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
-            title = classDiv.find_element_by_tag_name('a')
-            print(title.get_attribute('title'))
-        print(i, "html read")
-        continue
+        try:
+            for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
+                title = classDiv.find_element_by_tag_name('a').get_attribute('title')
+                title = "".join(title[17:title.index(" -")].split())
+                print(title)
+                sections = classDiv.find_elements_by_xpath(".//tr[starts-with(@id,'trSSR_CLSRCH_MTG1$')]")
+                sectionID_tag = "xxx"
+                times = ""
+                try:
+                    for section in sections:
+                        old_sectionID_tag = sectionID_tag
+                        sectionID = section.find_element_by_xpath(".//a[starts-with(@id,'MTG_CLASSNAME$')]").get_attribute("innerHTML")
+                        sectionID = sectionID[0:sectionID.index('<')]
+                        sectionID_tag = sectionID[(sectionID.index('-') + 1):]
+                        if sectionID_tag != old_sectionID_tag:
+                            times = times[:len(times)-1]
+                            times += ")," + sectionID_tag + "("
+
+                        timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
+                        timeslot = ", ".join(timeslot.splitlines())
+                        timeslot = standardizeTime(timeslot)
+                        times += "(" + timeslot + "),"
+
+                    times = times[2:len(times) - 1] + ")"
+                    print(times)
+                except:
+                    print("failed reading section in", title)
+            continue
+        except:
+            print("Error reading page", i)
 
     #print(browser.page_source)
