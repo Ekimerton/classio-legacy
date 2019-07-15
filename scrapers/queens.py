@@ -48,8 +48,6 @@ Base.metadata.create_all(bind=engine)
 
 start = int(input("Enter the last number that was parsed: "))
 
-    # Selenium custom wait classes
-
     # Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
 firefoxProfile = FirefoxProfile()
 firefoxProfile.set_preference('permissions.default.image', 2)
@@ -109,7 +107,6 @@ for i in range(start, 136):
     element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH')
     element.click()
 
-    # TODO: REPLACE THIS
     try:
         wait = WebDriverWait(browser, 30)
         wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_SSR_PB_MODIFY$5$')))
