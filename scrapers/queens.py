@@ -9,18 +9,9 @@ import sqlite3
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 
-start = int(input("Enter the last number that was parsed: "))
+#Setup
 
-Base = declarative_base()
-engine = create_engine('sqlite:///queens.db')
-
-class Course(Base):
-    __tablename__ = "queens_courses"
-    id = Column('id', Integer, primary_key=True)
-    name = Column('name', String, unique=True)
-    constant_times = Column('constant_times', Text, unique=False)
-    variable_times = Column('variable_times', Text, unique=False)
-
+    # Helper Methods
 def hour12to24(timestamp):
     ep_index = timestamp.index(":")
     hour = int(timestamp[:ep_index])
@@ -36,19 +27,40 @@ def standardizeTime(init_time):
     stnd_time = ""
     bits = init_time.split(", ")
     for bit in bits:
-        stnd_time = stnd_time + bit[:2] + hour12to24(bit[3: bit.index('-')]) + hour12to24(bit[bit.index('-') + 2:]) + ","
+        day = bit[:2]
+        if not day in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
+            return None
+        stnd_time = stnd_time + day + hour12to24(bit[3: bit.index('-')]) + hour12to24(bit[bit.index('-') + 2:]) + ","
     return stnd_time[:len(stnd_time)-1]
 
-## Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
+    # SQL/SQLite model classes
+Base = declarative_base()
+class Course(Base):
+    __tablename__ = "queens_course"
+    id = Column('id', Integer, primary_key=True)
+    name = Column('name', String, unique=True)
+    constant_times = Column('constant_times', Text, unique=False)
+    variable_times = Column('variable_times', Text, unique=False)
+
+
+engine = create_engine('sqlite:///queens.db')
+Base.metadata.create_all(bind=engine)
+
+start = int(input("Enter the last number that was parsed: "))
+
+    # Selenium custom wait classes
+
+    # Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
 firefoxProfile = FirefoxProfile()
-#firefoxProfile.set_preference('permissions.default.stylesheet', 2)
 firefoxProfile.set_preference('permissions.default.image', 2)
 firefoxProfile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
 browser = webdriver.Firefox(firefoxProfile)
 
-# Login Stuff
+# Selenium Driver run
+
+    # Login Stuff
 browser.get("https://my.queensu.ca/")
-wait = WebDriverWait(browser, 10)
+wait = WebDriverWait(browser, 30)
 
 element = wait.until(EC.presence_of_element_located((By.ID, 'username')))
 element.send_keys(os.environ['QUEENS_USERNAME'])
@@ -57,11 +69,11 @@ element.send_keys(os.environ['QUEENS_PASSWORD'])
 element = browser.find_element_by_name('_eventId_proceed')
 element.click()
 
-# Goes to course search
+    # Goes to course search
 for i in range(start, 136):
 
     browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
-    wait = WebDriverWait(browser, 10)
+    wait = WebDriverWait(browser, 30)
 
     # Fall
     element = wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_STRM$35$')))
@@ -98,11 +110,16 @@ for i in range(start, 136):
     element.click()
 
     # TODO: REPLACE THIS
-    time.sleep(5)
+    try:
+        wait = WebDriverWait(browser, 30)
+        wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_SSR_PB_MODIFY$5$')))
+    except:
+        if ("The search returns no results that match the criteria specified." in browser.page_source):
+            print(i, "returned no results")
+            continue
+        else:
+            print("Unknown error, query returned neither a proper page nor a 'not found'")
 
-    if ("The search returns no results that match the criteria specified." in browser.page_source):
-        print(i, "returned no results")
-        continue
     else:
         try:
             for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
@@ -119,20 +136,17 @@ for i in range(start, 136):
                         sectionID = sectionID[0:sectionID.index('<')]
                         sectionID_tag = sectionID[(sectionID.index('-') + 1):]
                         if sectionID_tag != old_sectionID_tag:
-                            times = times[:len(times)-1]
-                            times += ")," + sectionID_tag + "("
-
+                            times = times[:len(times) - 2]
+                            times += "-" + sectionID_tag + ":"
                         timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
                         timeslot = ", ".join(timeslot.splitlines())
                         timeslot = standardizeTime(timeslot)
-                        times += "(" + timeslot + "),"
+                        times += timeslot + ";"
 
-                    times = times[2:len(times) - 1] + ")"
+                    times = times[1:len(times) - 1] #Removes trailing '-' and leading ';'
                     print(times)
                 except:
-                    print("failed reading section in", title)
+                    print("failed reading section: ", title)
             continue
         except:
             print("Error reading page", i)
-
-    #print(browser.page_source)
