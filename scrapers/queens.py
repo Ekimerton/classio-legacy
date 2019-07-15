@@ -8,6 +8,7 @@ from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 import sqlite3
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 #Setup
 
@@ -42,10 +43,13 @@ class Course(Base):
     constant_times = Column('constant_times', Text, unique=False)
     variable_times = Column('variable_times', Text, unique=False)
 
-
+    # SQLAlchemy creation
 engine = create_engine('sqlite:///queens.db')
 Base.metadata.create_all(bind=engine)
+Session = sessionmaker(bind=engine)
+session = Session()
 
+# start index
 start = int(input("Enter the last number that was parsed: "))
 
     # Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
@@ -116,13 +120,12 @@ for i in range(start, 136):
             continue
         else:
             print("Unknown error, query returned neither a proper page nor a 'not found'")
-
+        print(i, "read successfully")
     else:
         try:
             for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
                 title = classDiv.find_element_by_tag_name('a').get_attribute('title')
                 title = "".join(title[17:title.index(" -")].split())
-                print(title)
                 sections = classDiv.find_elements_by_xpath(".//tr[starts-with(@id,'trSSR_CLSRCH_MTG1$')]")
                 sectionID_tag = "xxx"
                 times = ""
@@ -141,9 +144,30 @@ for i in range(start, 136):
                         times += timeslot + ";"
 
                     times = times[1:len(times) - 1] #Removes trailing '-' and leading ';'
-                    print(times)
+
+    # Adding to database
+                    constant_t = ""
+                    variable_t = ""
+                    for sectionType in times.split('-'):
+                        if ";" in sectionType:
+                            variable_t += sectionType + "-"
+                        else:
+                            constant_t += sectionType + "-"
+                    if constant_t:
+                        constant_t = constant_t[:len(constant_t) - 2]
+                    if variable_t:
+                        variable_t = variable_t[:len(variable_t) - 2]
+
+                    #course = Course()
+                    #course.name = title
+                    #course.constant_times = constant_t
+                    #course.variable_times = variable_t
+                    #session.add(course)
+                    #session.commit()
                 except:
                     print("failed reading section: ", title)
             continue
         except:
             print("Error reading page", i)
+
+session.close()
