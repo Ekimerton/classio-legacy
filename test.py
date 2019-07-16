@@ -9,14 +9,29 @@ def hour12to24(timestamp):
         hour = "0" + str(hour)
     return str(hour) + minute
 
+# TODO: QUEENS DECIDED TO START USING MoTu and such, ruining my parser. Should be easy to fix but BRUH
 def standardizeTime(init_time):
     stnd_time = ""
     bits = init_time.split(", ")
     for bit in bits:
-        stnd_time = stnd_time + bit[:2] + hour12to24(bit[3: bit.index('-')]) + hour12to24(bit[bit.index('-') + 2:]) + ","
+        day_string = bit[:2]
+        day_list = []
+        while day_string in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
+             day_list.append(day_string)
+             bit = bit[2:]
+             day_string = bit[:2]
 
+        first_hour = bit[:bit.index('-')]
+        last_hour = bit[bit.index('-') + 1:]
+        for day in day_list:
+            stnd_time = stnd_time + day + hour12to24(first_hour) + hour12to24(last_hour) + ","
     return stnd_time[:len(stnd_time)-1]
 
+print(standardizeTime("MoTuWe8:30AM-9:30AM"))
+
+
+
+'''
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -35,6 +50,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 '''
+'''
 course = Course()
 course.name = "Helloninja"
 course.constant_times = "constant"
@@ -42,6 +58,8 @@ course.variable_times = "variable"
 session.add(course)
 session.commit()
 '''
+'''
+
 courses = session.query(Course).all()
 for course in courses:
     print(course.name)
@@ -49,3 +67,4 @@ for course in courses:
     print(course.variable_times)
 
 session.close()
+'''
