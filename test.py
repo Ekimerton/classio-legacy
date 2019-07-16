@@ -17,4 +17,35 @@ def standardizeTime(init_time):
 
     return stnd_time[:len(stnd_time)-1]
 
-print(hour12to24("8:00AM"))
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+Base = declarative_base()
+class Course(Base):
+    __tablename__ = "queens_course"
+    id = Column('id', Integer, primary_key=True)
+    name = Column('name', String, unique=True)
+    constant_times = Column('constant_times', Text, unique=False)
+    variable_times = Column('variable_times', Text, unique=False)
+
+engine = create_engine('sqlite:///scrapers/queens.db')
+Base.metadata.create_all(bind=engine)
+Session = sessionmaker(bind=engine)
+session = Session()
+
+'''
+course = Course()
+course.name = "Helloninja"
+course.constant_times = "constant"
+course.variable_times = "variable"
+session.add(course)
+session.commit()
+'''
+courses = session.query(Course).all()
+for course in courses:
+    print(course.name)
+    print(course.constant_times)
+    print(course.variable_times)
+
+session.close()
