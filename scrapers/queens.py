@@ -39,6 +39,9 @@ def standardizeTime(init_time):
         last_hour = bit[bit.index('-') + 1:]
         for day in day_list:
             stnd_time = stnd_time + day + hour12to24(first_hour) + hour12to24(last_hour) + ","
+
+    if not stnd_time:
+        return None
     return stnd_time[:len(stnd_time)-1]
 
     # SQL/SQLite model classes
@@ -46,7 +49,8 @@ Base = declarative_base()
 class Course(Base):
     __tablename__ = "queens_course"
     id = Column('id', Integer, primary_key=True)
-    name = Column('name', String, unique=True)
+    name = Column('name', String)
+    semester = Column('semester', String)
     constant_times = Column('constant_times', Text, unique=False)
     variable_times = Column('variable_times', Text, unique=False)
 
@@ -55,9 +59,15 @@ engine = create_engine('sqlite:///queens.db')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
+#session.rollback()
 
 # start index
 start = int(input("Enter the last number that was parsed: "))
+semester = input("Fall or Winter? (2019/2020): ")
+
+if not semester in ['Fall', 'Winter']:
+    print("Please enter 'Fall' or 'Winter'")
+    exit()
 
     # Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
 firefoxProfile = FirefoxProfile()
@@ -79,19 +89,21 @@ element = browser.find_element_by_name('_eventId_proceed')
 element.click()
 
     # Goes to course search
-for i in range(start, 136):
+for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall, 143 for winter)
 
     browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
     wait = WebDriverWait(browser, 30)
 
-    # Fall
+    # semester Selection
     element = wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_STRM$35$')))
-    for option in element.find_elements_by_tag_name('option'):
-        if option.text == '2019 Fall':
-            option.click()
-            break
+    option = element.find_elements_by_tag_name('option')
+    if option != '2019 ' + semester:
+        for option in element.find_elements_by_tag_name('option'):
+            if option.text == '2019 ' + semester:
+                option.click()
+                break
 
-    time.sleep(5)
+        time.sleep(5)
 
     # Set subject type
     element = browser.find_element_by_id('SSR_CLSRCH_WRK_SUBJECT_SRCH$0')
@@ -120,7 +132,7 @@ for i in range(start, 136):
     element.click()
 
     try:
-        wait = WebDriverWait(browser, 30)
+        wait = WebDriverWait(browser, 15)
         wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_SSR_PB_MODIFY$5$')))
         print("    read successfully")
     except:
@@ -130,52 +142,66 @@ for i in range(start, 136):
         else:
             print("    Unknown error, query returned neither a proper page nor a 'not found'")
 
-    try:
-        for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
-            title = classDiv.find_element_by_tag_name('a').get_attribute('title')
-            title = "".join(title[17:title.index(" -")].split())
-            sections = classDiv.find_elements_by_xpath(".//tr[starts-with(@id,'trSSR_CLSRCH_MTG1$')]")
-            sectionID_tag = "xxx"
-            times = ""
+    for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
+        title = classDiv.find_element_by_tag_name('a').get_attribute('title')
+        title = "".join(title[17:title.index(" -")].split())
+        sections = classDiv.find_elements_by_xpath(".//tr[starts-with(@id,'trSSR_CLSRCH_MTG1$')]")
+        sectionID_tag = "xxx"
+        times = ""
+        try:
+            for section in sections:
+                old_sectionID_tag = sectionID_tag
+                sectionID = section.find_element_by_xpath(".//a[starts-with(@id,'MTG_CLASSNAME$')]").get_attribute("innerHTML")
+                sectionID = sectionID[0:sectionID.index('<')]
+                sectionID_tag = sectionID[(sectionID.index('-') + 1):]
+                if sectionID_tag != old_sectionID_tag:
+                    times = times[:len(times) - 2]
+                    times += "-" + sectionID_tag + ":"
+                timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
+                timeslot = ", ".join(timeslot.splitlines())
+                timeslot = standardizeTime(timeslot)
+                times += timeslot + ";"
+
+            times = times[1:len(times) - 1] #Removes trailing '-' and leading ';'
+
+# ding to database
+            constant_t = ""
+            variable_t = ""
+            for sectionType in times.split('-'):
+                if ";" in sectionType:
+                    variable_t += sectionType + "-"
+                else:
+                    constant_t += sectionType + "-"
+            if constant_t:
+                constant_t = constant_t[:len(constant_t) - 2]
+            if variable_t:
+                variable_t = variable_t[:len(variable_t) - 2]
+
+            exists = False
             try:
-                for section in sections:
-                    old_sectionID_tag = sectionID_tag
-                    sectionID = section.find_element_by_xpath(".//a[starts-with(@id,'MTG_CLASSNAME$')]").get_attribute("innerHTML")
-                    sectionID = sectionID[0:sectionID.index('<')]
-                    sectionID_tag = sectionID[(sectionID.index('-') + 1):]
-                    if sectionID_tag != old_sectionID_tag:
-                        times = times[:len(times) - 2]
-                        times += "-" + sectionID_tag + ":"
-                    timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
-                    timeslot = ", ".join(timeslot.splitlines())
-                    timeslot = standardizeTime(timeslot)
-                    times += timeslot + ";"
-
-                times = times[1:len(times) - 1] #Removes trailing '-' and leading ';'
-
-    # ding to database
-                constant_t = ""
-                variable_t = ""
-                for sectionType in times.split('-'):
-                    if ";" in sectionType:
-                        variable_t += sectionType + "-"
-                    else:
-                        constant_t += sectionType + "-"
-                if constant_t:
-                    constant_t = constant_t[:len(constant_t) - 2]
-                if variable_t:
-                    variable_t = variable_t[:len(variable_t) - 2]
-
+                q = session.query(Course).filter(Course.name == title, Course.semester == semester[0]).first()
+                if q.name == title and q.semester == semester[0]:
+                    exists = True
+                    print("       ", title, "already exists in the db")
+            except:
+                pass
+            if not exists:
                 course = Course()
                 course.name = title
                 course.constant_times = constant_t
                 course.variable_times = variable_t
+                course.semester = semester[0]
                 session.add(course)
-                session.commit()
-            except:
-                print("failed reading section: ", title)
-        continue
-    except:
-        print("Error reading page", i)
+                try:
+                    session.commit()
+                except:
+                    session.rollback()
+                    raise
+                finally:
+                    session.close()
+        except Exception as e:
+            print("        failed reading section: ", title)
+            print(e)
+    continue
 
 session.close()
