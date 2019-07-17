@@ -29,4 +29,4 @@ def standardizeTime(init_time):
             stnd_time = stnd_time + day + hour12to24(first_hour) + hour12to24(last_hour) + ","
     return stnd_time[:len(stnd_time)-1]
 
-print(hour12to24("12:00AM"))
+print(standardizeTime("Mo12:00PM-1:00PM"))

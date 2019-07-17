@@ -9,7 +9,7 @@ import sqlite3
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-# TODO: FIX (FOR THE NEXT READ) THAT THE FINAL 0 IS CUT FROM SECTION TYPE 
+# TODO: FIX (FOR THE NEXT READ) THAT THE FINAL 0 IS CUT FROM SECTION TYPE
 #Setup
 
     # Helper Methods
@@ -162,7 +162,7 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
                 timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
                 timeslot = ", ".join(timeslot.splitlines())
                 timeslot = standardizeTime(timeslot)
-                times += timeslot + ";"
+                times += timeslot + ";" #PROBLEM IS AROUND HERE
 
             times = times[1:len(times) - 1] #Removes trailing '-' and leading ';'
 
