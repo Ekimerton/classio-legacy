@@ -18,6 +18,8 @@ def hour12to24(timestamp):
     hour = int(timestamp[:ep_index])
     minute = timestamp[ep_index + 1:ep_index + 3]
     am_pm = timestamp[ep_index + 3:ep_index + 5]
+    if hour == 12:
+        hour = 0
     if am_pm == "PM":
         hour = str(hour + 12)
     if am_pm == "AM" and hour < 10:
