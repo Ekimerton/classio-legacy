@@ -9,7 +9,7 @@ import sqlite3
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
+# TODO: FIX (FOR THE NEXT READ) THAT THE FINAL 0 IS CUT FROM SECTION TYPE 
 #Setup
 
     # Helper Methods
