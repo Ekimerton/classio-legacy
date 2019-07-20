@@ -29,4 +29,25 @@ def standardizeTime(init_time):
             stnd_time = stnd_time + day + hour12to24(first_hour) + hour12to24(last_hour) + ","
     return stnd_time[:len(stnd_time)-1]
 
-print(standardizeTime("Mo12:00PM-1:00PM"))
+# Checks if two classes have conflicting ranges, turns out this is a hard problem! (medium more like haha!!!!!! xdddddD)
+def is_conflicted(list1, list2):
+    for time1 in list1:
+        for time2 in list2:
+            # If the days are different, they don't overlap for certain
+            if time1[:2] == time2[:2]:
+                # time1end > time2start AND time2end > time1start, checks if ranges overlap
+                if time1[6:] > time2[2:6] and time2[6:] > time1[2:6]:
+                    return True
+    return False
+
+# True means no conflicts, false means there is conflicts
+def check_timetable(timetable):
+    for i in range(len(timetable)):
+        for j in range(i + 1, len(timetable)):
+            print(timetable[i], timetable[j])
+            if is_conflicted(timetable[i], timetable[j]):
+                return False
+    return True
+
+
+print(check_timetable([["Mo10301130", "Mo14301530"], ["Mo11301430", "Fr22002300"], ["Mo16001700", "Th10301130"]]))

@@ -1,3 +1,7 @@
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
+from sqlalchemy.orm import sessionmaker
+
 Base = declarative_base()
 class CourseDB(Base):
     __tablename__ = "queens_course"
@@ -66,43 +70,34 @@ def parseClass(course):
             class_list.insert(0, section_name)
             variable_t.append(class_list)
             mergeCopies(variable_t)
-
     return Course(course.name, course.semester, constant_t, variable_t)
 
-def searchClass(name):
-    from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
-    from sqlalchemy.ext.declarative import declarative_base
-    from sqlalchemy.orm import sessionmaker
+def searchClass(name, semester):
     engine = create_engine('sqlite:///scrapers/queens.db')
     Base.metadata.create_all(bind=engine)
     Session = sessionmaker(bind=engine)
     session = Session()
     class_list = []
     try:
-        courses = session.query(CourseDB).filter_by(name=name, semester='F').first()
+        courses = session.query(CourseDB).filter_by(name=name, semester=semester).first()
         class_list.append(parseClass(courses))
     except:
         pass
     try:
-        courses = session.query(CourseDB).filter_by(name=name, semester='W').first()
+        courses = session.query(CourseDB).filter_by(name=name+'A', semester=semester).first()
         class_list.append(parseClass(courses))
     except:
         pass
     try:
-        courses = session.query(CourseDB).filter_by(name=name+'A').first()
-        class_list.append(parseClass(courses))
-    except:
-        pass
-    try:
-        courses = session.query(CourseDB).filter_by(name=name+'B').first()
+        courses = session.query(CourseDB).filter_by(name=name+'B', semester=semester).first()
         class_list.append(parseClass(courses))
     except:
         pass
     session.close()
     return class_list
 
-def parse_request(request_string):
+def parse_request(request_string, semester):
     class_list = []
     for class_name in request_string.split(','):
-        class_list += searchClass(class_name)
+        class_list += searchClass(class_name, semester)
     return class_list
