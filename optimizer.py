@@ -109,22 +109,19 @@ def analyze_timetable(timetable):
             if is_free(day_dict[day], '18301930') or is_free(day_dict[day], '19302030'):
                 dinner_free+=1
             # Adds total time between classes
-            print(day, day_dict[day])
             time_in_between += calculate_offtime(day_dict[day])
     day_type = max(set(day_types), key=day_types.count)
-    print("day type:", day_type)
-    print("# of free lunches:", lunch_free)
-    print("# of free dinners:", dinner_free)
-    print("# of hours between classes:", time_in_between)
+    score = time_in_between + (5 - lunch_free) + (5 - dinner_free)
+    return {'score':score, 'day_type':day_type, 'lunch':lunch_free, 'dinner':dinner_free, 'time_off':time_in_between}
 
-ledger, permutations = get_permutations("CISC203,CISC204,CISC220,STAT263,CLST205", 'F')
-print(ledger)
-valid_list = []
-for i in permutations:
-    if check_timetable(i):
-        valid_list.append(i)
-print("Total combos:", str(len(permutations)))
-print("Total valid combos:", str(len(valid_list)))
+def parse_string(classes, semester):
+    ledger, permutations = get_permutations(classes, semester)
+    valid_list = []
+    for i in permutations:
+        if check_timetable(i):
+            valid_list.append(i)
+    return_list = []
+    for l in valid_list:
+        return_list.append((l, analyze_timetable(l)))
 
-for l in valid_list:
-    analyze_timetable(l)
+    return ledger, return_list
