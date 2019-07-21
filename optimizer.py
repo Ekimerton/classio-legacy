@@ -12,6 +12,13 @@ def is_conflicted(list1, list2):
                     return True
     return False
 
+# Checks to see if a list of times is free during a time, eg between 11301230 for lunch.
+def is_free(day_list, timeset):
+    for timeframe in day_list:
+        if timeframe[4:] > timeset[:4] and timeset[4:] > timeframe[:4]:
+            return False
+    return True
+
 # True means no conflicts, false means there is conflicts
 def check_timetable(timetable):
     for i in range(len(timetable)):
@@ -20,6 +27,22 @@ def check_timetable(timetable):
                 return False
     return True
 
+# Calculates the amount of time inbetween classes for a day
+def calculate_offtime(day):
+    offtime = 0
+    end = day[0][:4]
+    for timeframe in day:
+        offtime += int(timeframe[:4]) - int(end)
+        end = timeframe[4:]
+    if offtime % 100 == 0:
+        return offtime/100
+    elif offtime % 100 == 30:
+        return ((offtime - 30)/100) + 0.5
+    elif offtime % 100 == 70:
+        return ((offtime - 70)/100) + 0.5
+    return offtime
+
+# Returns all possible permutations
 def get_permutations(classes, semester):
     resp = parse_class.parse_request(classes, semester)
     constant_times = []
@@ -48,13 +71,60 @@ def get_permutations(classes, semester):
         permutations.append(schedule)
     return ledger, permutations
 
-ledger, permutations = get_permutations("CISC203,CISC204,CISC220,STAT263,ECON110", 'F')
+# Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
+def analyze_timetable(timetable):
+    #First flatten
+    flat_list = [item for sublist in timetable for item in sublist]
+    #Sort into lists for Mo, Tu, We, Th, Fr
+    day_dict = {'Mo':[], 'Tu':[], 'We':[], 'Th':[], 'Fr':[]}
+    for time in flat_list:
+        day_list = time[:2]
+        day_dict[day_list].append(time[2:])
+    # Go through lists to analyze time
+    time_in_between = 0
+    lunch_free = 0
+    dinner_free = 0
+    day_types = [] #This list is saturated, then the mode becomes the day type
+    for day in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
+        # Checks only if there are classes that day
+        if day:
+            day_dict[day].sort()
+            # Checks if day is m/a/e/x
+            start = int(day_dict[day][0][:4])
+            end = int(day_dict[day][len(day_dict[day])-1][4:])
+            day_len = end - start
+            if day_len > 500:
+                day_types.append('x')
+            else:
+                if start < 1130:
+                    day_types.append('m')
+                if start >= 1130 and start < 1630:
+                    day_types.append('a')
+                if start >= 1630:
+                    day_types.append('e')
+            # Checks if lunch is free
+            if is_free(day_dict[day], '11301230') or is_free(day_dict[day], '12301330'):
+                lunch_free+=1
+            # Checks if dinner is free
+            if is_free(day_dict[day], '18301930') or is_free(day_dict[day], '19302030'):
+                dinner_free+=1
+            # Adds total time between classes
+            print(day, day_dict[day])
+            time_in_between += calculate_offtime(day_dict[day])
+    day_type = max(set(day_types), key=day_types.count)
+    print("day type:", day_type)
+    print("# of free lunches:", lunch_free)
+    print("# of free dinners:", dinner_free)
+    print("# of hours between classes:", time_in_between)
+
+ledger, permutations = get_permutations("CISC203,CISC204,CISC220,STAT263,CLST205", 'F')
 print(ledger)
 valid_list = []
-
 for i in permutations:
     if check_timetable(i):
         valid_list.append(i)
-
 print("Total combos:", str(len(permutations)))
 print("Total valid combos:", str(len(valid_list)))
+
+for l in valid_list:
+    analyze_timetable(l)

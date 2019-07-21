@@ -49,5 +49,26 @@ def check_timetable(timetable):
                 return False
     return True
 
+def is_free(day_list, timeset):
+    for timeframe in day_list:
+        if timeframe[4:] > timeset[:4] and timeset[4:] > timeframe[:4]:
+            return False
+    return True
 
-print(check_timetable([["Mo10301130", "Mo14301530"], ["Mo11301430", "Fr22002300"], ["Mo16001700", "Th10301130"]]))
+def calculate_offtime(day):
+    offtime = 0
+    end = day[0][:4]
+    for timeframe in day:
+        start = timeframe[:4]
+        print(int(end), int(start))
+        offtime += int(start) - int(end)
+        end = timeframe[4:]
+    if offtime % 100 == 0:
+        return offtime/100
+    elif offtime % 100 == 30:
+        return ((offtime - 30)/100) + 0.5
+    elif offtime % 100 == 70:
+        return ((offtime - 70)/100) + 0.5
+    return offtime
+
+print(calculate_offtime(['08301000', '15301630', '16301730']))
