@@ -114,12 +114,12 @@ def analyze_timetable(timetable):
                 dinner_free+=1
             # Adds total time between classes
             time_in_between += calculate_offtime(day_dict[day])
+        else:
+            lunch_free+=1
+            dinner_free+=1
     day_type = max(set(day_types), key=day_types.count)
-    score = time_in_between + (5 - lunch_free) + (5 - dinner_free)
+    score = time_in_between + 3*(5 - lunch_free) + 3*(5 - dinner_free)
     return {'score':score, 'day_type':day_type, 'lunch':lunch_free, 'dinner':dinner_free, 'time_off':time_in_between}
-
-def get_score(clas):
-    return clas[0]
 
 def parse_string(classes, semester, school):
     ledger, permutations = get_permutations(classes, semester, school)

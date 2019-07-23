@@ -1,28 +1,86 @@
-<h1> {{university}} </h1>
-<form method="POST" action="">
-  {{ form.hidden_tag() }}
-  <fieldset>
-    <div>
-      {{ form.classes.label }}
-      {% if form.classes.errors %}
-      {{ form.classes }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>classio</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}" />
+</head>
+<body>
+  <h1> {{university}} </h1>
+  <form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset>
       <div>
-        {% for error in form.classes.errors %}
-        <span>{{ error }}</span>
+        {{ form.classes.label }}
+        {% if form.classes.errors %}
+        {{ form.classes }}
+        <div>
+          {% for error in form.classes.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        {{ form.classes }}
+        {% endif %}
+      </div>
+    </fieldset>
+    {{ form.submit }}
+  </form>
+  {% if class_list is defined and ledger is defined %}
+    <p> Number of options: {{len}} </p>
+    <div class='row timetable-section'>
+      {% for section in ledger %}
+      <div class='col'>
+        <p class='text-center'> {{section}} </p>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% for class in class_list %}
+    <div>
+      <p> {{class['stats'['day_type']]}} </p>
+      {% if class['stats']['day_type'] == 'm' %}
+        <div style="background-color:#aa0000">
+          <p> {{class['stats']['day_type']}} </p>
+          <p> {{class['stats']}} </p>
+        </div>
+      {% elif class['stats']['day_type'] == 'a' %}
+        <div style="background-color:#00aa00">
+          <p> {{class['stats']['day_type']}} </p>
+          <p> {{class['stats']}} </p>
+        </div>
+      {% elif class['stats']['day_type'] == 'e' %}
+        <div style="background-color:#0000aa">
+          <p> {{class['stats']['day_type']}} </p>
+          <p> {{class['stats']}} </p>
+        </div>
+      {% elif class['stats']['day_type'] == 'x' %}
+        <div style="background-color:#aa00aa">
+          <p> {{class['stats']['day_type']}} </p>
+          <p> {{class['stats']}} </p>
+        </div>
+      {% else %}
+      <div style="background-color=#aaaaaa">
+        <p> {{class['stats']['day_type']}} </p>
+        <p> {{class['stats']}} </p>
+      </div>
+      {%endif%}
+
+      <div class='row timetable-section'>
+        {% for section in class['classes']%}
+        <div class='col'>
+          <div class='text-center'>
+            {% for time in section %}
+              <p> {{time}} <p>
+            {% endfor %}
+          </div>
+        </div>
         {% endfor %}
       </div>
-      {% else %}
-      {{ form.classes }}
-      {% endif %}
     </div>
-  </fieldset>
-  {{ form.submit }}
-</form>
-{% if class_list is defined and ledger is defined %}
-  <p> Number of options: {{len}} </p>
-  <p> {{ledger}} </p>
-  {% for class in class_list %}
-    <h2> {{class['classes']}} </h2>
-    <p> {{class['stats']}} </p>
-  {% endfor %}
-{% endif %}
+    {% endfor %}
+  {% endif %}
+</body>
