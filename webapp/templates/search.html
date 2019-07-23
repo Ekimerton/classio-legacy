@@ -1,0 +1,28 @@
+<h1> {{university}} </h1>
+<form method="POST" action="">
+  {{ form.hidden_tag() }}
+  <fieldset>
+    <div>
+      {{ form.classes.label }}
+      {% if form.classes.errors %}
+      {{ form.classes }}
+      <div>
+        {% for error in form.classes.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.classes }}
+      {% endif %}
+    </div>
+  </fieldset>
+  {{ form.submit }}
+</form>
+{% if class_list is defined and ledger is defined %}
+  <p> Number of options: {{len}} </p>
+  <p> {{ledger}} </p>
+  {% for class in class_list %}
+    <h2> {{class['classes']}} </h2>
+    <p> {{class['stats']}} </p>
+  {% endfor %}
+{% endif %}

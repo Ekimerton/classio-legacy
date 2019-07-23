@@ -72,8 +72,8 @@ def parseClass(course):
             mergeCopies(variable_t)
     return Course(course.name, course.semester, constant_t, variable_t)
 
-def searchClass(name, semester):
-    engine = create_engine('sqlite:///scrapers/queens.db')
+def searchClass(name, semester, school):
+    engine = create_engine('sqlite:///scrapers/{}.db'.format(school))
     Base.metadata.create_all(bind=engine)
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -96,8 +96,8 @@ def searchClass(name, semester):
     session.close()
     return class_list
 
-def parse_request(request_string, semester):
+def parse_request(request_string, semester, school):
     class_list = []
     for class_name in request_string.split(','):
-        class_list += searchClass(class_name, semester)
+        class_list += searchClass(class_name, semester, school)
     return class_list

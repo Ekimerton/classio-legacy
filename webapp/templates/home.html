@@ -1,1 +1,33 @@
 <p> Home sweet home </p>
+<form method="POST" action="">
+  {{ form.hidden_tag() }}
+  <fieldset>
+    <div>
+      {{ form.name.label }}
+      {% if form.name.errors %}
+      {{ form.name }}
+      <div>
+        {% for error in form.name.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.name }}
+      {% endif %}
+    </div>
+    <div>
+      {{ form.semester.label }}
+      {% if form.semester.errors %}
+      {{ form.semester }}
+      <div>
+        {% for error in form.semester.errors %}
+        <span>{{ error }}</span>
+        {% endfor %}
+      </div>
+      {% else %}
+      {{ form.semester }}
+      {% endif %}
+    </div>
+  </fieldset>
+  {{ form.submit }}
+</form>

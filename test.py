@@ -71,4 +71,30 @@ def calculate_offtime(day):
         return ((offtime - 70)/100) + 0.5
     return offtime
 
-print(calculate_offtime(['08301000', '15301630', '16301730']))
+'''
+def calculate_offtime(day):
+    offtime = 0
+    end = day[0][:4]
+    for timeframe in day:
+        offtime += int(timeframe[:4]) - int(end)
+        end = timeframe[4:]
+    if offtime % 100 == 0:
+        return offtime/100
+    elif offtime % 100 == 30:
+        return ((offtime - 30)/100) + 0.5
+    elif offtime % 100 == 70:
+        return ((offtime - 70)/100) + 0.5
+    return offtime
+'''
+
+import optimizers.optimizer as optimizer
+
+result = optimizer.parse_string("CISC121,CISC124", 'F', 'queens')
+#result = optimizer.parse_string("CISC221,CISC223,CISC235,CISC271,CLST205", 'W', 'queens')
+
+
+print(result[0])
+print("----------------------------")
+for r in result[1]:
+    print(r)
+    print("----------------------------")

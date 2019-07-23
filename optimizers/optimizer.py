@@ -1,5 +1,5 @@
 import itertools
-import parse_class
+import optimizers.parse_class as parse_class
 
 # Checks if two classes have conflicting ranges, turns out this is a hard problem! (medium more like haha!!!!!! xdddddD)
 def is_conflicted(list1, list2):
@@ -29,11 +29,15 @@ def check_timetable(timetable):
 
 # Calculates the amount of time inbetween classes for a day
 def calculate_offtime(day):
+    print(day)
     offtime = 0
     end = day[0][:4]
     for timeframe in day:
-        offtime += int(timeframe[:4]) - int(end)
+        start = timeframe[:4]
+        print(int(end), int(start))
+        offtime += int(start) - int(end)
         end = timeframe[4:]
+        print(offtime)
     if offtime % 100 == 0:
         return offtime/100
     elif offtime % 100 == 30:
@@ -43,8 +47,8 @@ def calculate_offtime(day):
     return offtime
 
 # Returns all possible permutations
-def get_permutations(classes, semester):
-    resp = parse_class.parse_request(classes, semester)
+def get_permutations(classes, semester, school):
+    resp = parse_class.parse_request(classes, semester, school)
     constant_times = []
     constant_sections = []
     variable_times = []
@@ -87,7 +91,7 @@ def analyze_timetable(timetable):
     day_types = [] #This list is saturated, then the mode becomes the day type
     for day in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
         # Checks only if there are classes that day
-        if day:
+        if day_dict[day]:
             day_dict[day].sort()
             # Checks if day is m/a/e/x
             start = int(day_dict[day][0][:4])
@@ -114,14 +118,19 @@ def analyze_timetable(timetable):
     score = time_in_between + (5 - lunch_free) + (5 - dinner_free)
     return {'score':score, 'day_type':day_type, 'lunch':lunch_free, 'dinner':dinner_free, 'time_off':time_in_between}
 
-def parse_string(classes, semester):
-    ledger, permutations = get_permutations(classes, semester)
+def get_score(clas):
+    return clas[0]
+
+def parse_string(classes, semester, school):
+    ledger, permutations = get_permutations(classes, semester, school)
     valid_list = []
     for i in permutations:
         if check_timetable(i):
             valid_list.append(i)
     return_list = []
     for l in valid_list:
-        return_list.append((l, analyze_timetable(l)))
+        return_list.append({'classes':l, 'stats':analyze_timetable(l)})
 
+    # Sort by score
+    return_list = sorted(return_list, key = lambda i: i['stats']['score'])
     return ledger, return_list
