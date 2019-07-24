@@ -28,7 +28,8 @@ def search(university):
             if classes:
                 return redirect(url_for('main.search', university=university, semester=form.semester.data, classes=form.classes.data))
         if classes:
-            ledger, class_list = optimizer.parse_string(classes, semester, university)
+            clean_classes = classes.replace(" ", "")
+            ledger, class_list = optimizer.parse_string(clean_classes, semester, university)
             return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=len(class_list))
         return render_template("search.html", university=uni_dict[university], form=form)
     else:
