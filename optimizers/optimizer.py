@@ -29,15 +29,12 @@ def check_timetable(timetable):
 
 # Calculates the amount of time inbetween classes for a day
 def calculate_offtime(day):
-    print(day)
     offtime = 0
     end = day[0][:4]
     for timeframe in day:
         start = timeframe[:4]
-        print(int(end), int(start))
         offtime += int(start) - int(end)
         end = timeframe[4:]
-        print(offtime)
     if offtime % 100 == 0:
         return offtime/100
     elif offtime % 100 == 30:
@@ -129,8 +126,10 @@ def parse_string(classes, semester, school):
             valid_list.append(i)
     return_list = []
     for l in valid_list:
-        return_list.append({'classes':l, 'stats':analyze_timetable(l)})
-
+        try:
+            return_list.append({'classes':l, 'stats':analyze_timetable(l)})
+        except:
+            pass
     # Sort by score
     return_list = sorted(return_list, key = lambda i: i['stats']['score'])
     return ledger, return_list

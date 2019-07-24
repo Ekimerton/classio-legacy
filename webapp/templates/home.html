@@ -15,19 +15,6 @@
       {{ form.name }}
       {% endif %}
     </div>
-    <div>
-      {{ form.semester.label }}
-      {% if form.semester.errors %}
-      {{ form.semester }}
-      <div>
-        {% for error in form.semester.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.semester }}
-      {% endif %}
-    </div>
   </fieldset>
   {{ form.submit }}
 </form>

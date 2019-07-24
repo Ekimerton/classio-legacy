@@ -12,91 +12,102 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </head>
 <body>
-  <div class="jumbotron container">
-    <h1 class='text-center'> <a href="{{url_for('main.home')}}"> classio </a> • {{university}} </h1>
+  <div class="jumbotron container mt-4" style="background:#ffffff">
+    <h1 class='text-center'> <a href="{{url_for('main.home')}}"> classio</a> • {{university}} </h1>
     <form method="POST" action="">
       {{ form.hidden_tag() }}
       <fieldset class="form-group">
-        <div class="form-group">
-          {{ form.classes.label(class="form-control-label")}}
-          {% if form.classes.errors %}
-          {{ form.classes(class="form-control form-control-lg is-invalid") }}
-          <div class="invalid-feedback">
-            {% for error in form.classes.errors %}
-            <span>{{ error }}</span>
-            {% endfor %}
+        <div class="row">
+          <div class="form-group col">
+            {{ form.classes.label(class="form-control-label")}}
+            {% if form.classes.errors %}
+            {{ form.classes(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.classes.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            {{ form.classes(class="form-control form-control-lg") }}
+            {% endif %}
+            <small> Enter your classes as: CLAS101,CLAS102,CLAS103... </small>
           </div>
-          {% else %}
-          {{ form.classes(class="form-control form-control-lg") }}
-          {% endif %}
+          <div class="form-group col-2">
+            {{ form.semester.label(class="form-control-label")}}
+            {% if form.semester.errors %}
+            {{ form.semester(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.semester.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            {{ form.semester(class="form-control form-control-lg") }}
+            {% endif %}
+          </div>
         </div>
       </fieldset>
-      {{ form.submit(class="btn btn-dark") }}
+      {{ form.submit(class="btn btn-dark col") }}
     </form>
   </div>
 
   {% if class_list is defined and ledger is defined %}
-  <div class="container jumbotron">
+  <div class="container jumbotron p-3" style="background:#ffffff">
+    <h2 class='text-center'> Number of options: {{len}} </h2>
     {% for class in class_list %}
-    <div class="mb-4">
-      <a data-toggle="collapse" href="#section{{loop.index}}">
-        {% if class['stats']['day_type'] == 'm' %}
-          <div class="p-2" style="background:linear-gradient(165deg, rgba(255,235,0,1) 0%, rgba(255,171,0,1) 100%)">
-            <div class="row m-1 text-center align-middle">
-              <p class="col"> {{class['stats']['day_type']}} </p>
-              <p class="col"> Number of lunches free: {{class['stats']['lunch']}} </p>
-              <p class="col"> Number of dinners free: {{class['stats']['dinner']}} </p>
-              <p class="col"> {{class['stats']['time_off']}} </p>
+    <div class="m-3 timetable-section" style="border-width: 5px;border-bottom-style: solid">
+      <a data-toggle="collapse" href="#section{{loop.index}}" style="text-decoration: none">
+        <div class="">
+          <div class="row text" style="margin: auto">
+            <div class='col-auto text-center' style="background:#343A40;color:#ffffff">
+              <h2 class='m-2'> {{ 90 - class['stats']['score']}}% </h2>
+            </div>
+            <div class='col-3 text-center {{class['stats']['day_type']}}' style="color:#000000">
+              {%if class['stats']['day_type'] == 'm'%}
+                <h2 class="m-2">Morning</h2>
+              {%elif class['stats']['day_type'] == 'a'%}
+                <h2 class="m-2">Afternoon</h2>
+              {%elif class['stats']['day_type'] == 'e'%}
+                <h2 class="m-2">Evening</h2>
+              {%elif class['stats']['day_type'] == 'x'%}
+                <h2 class="m-2">Mixed</h2>
+              {%endif%}
+            </div>
+            <div class="col timetable-section-stats row" style="margin: auto">
+              <div class="col-auto text-center">
+                <p class="mb-3 mt-3"> # of lunches free: {{class['stats']['lunch']}} </p>
+              </div>
+              <div class="col text-center">
+                <p class="mb-3 mt-3"> # of dinners free: {{class['stats']['dinner']}} </p>
+              </div>
+              <div class="col-auto text-center">
+                <p class="mb-3 mt-3"> Time between classes: {{class['stats']['time_off']}} </p>
+              </div>
             </div>
           </div>
-        {% elif class['stats']['day_type'] == 'a' %}
-          <div class="p-2 " style="background: linear-gradient(165deg, rgba(122,239,255,1) 25%, rgba(30,137,255,1) 75%)">
-            <div class="row m-1 text-center align-middle">
-              <p class="col"> {{class['stats']['day_type']}} </p>
-              <p class="col"> Number of lunches free: {{class['stats']['lunch']}} </p>
-              <p class="col"> Number of dinners free: {{class['stats']['dinner']}} </p>
-              <p class="col"> {{class['stats']['time_off']}} </p>
-            </div>
-          </div>
-        {% elif class['stats']['day_type'] == 'e' %}
-          <div class="p-2" style="background: linear-gradient(165deg, rgba(30,137,255,1) 25%, rgba(1,14,134,1) 75%)">
-            <div class="row m-1 text-center align-middle">
-              <p class="col"> {{class['stats']['day_type']}} </p>
-              <p class="col"> Number of lunches free: {{class['stats']['lunch']}} </p>
-              <p class="col"> Number of dinners free: {{class['stats']['dinner']}} </p>
-              <p class="col"> {{class['stats']['time_off']}} </p>
-            </div>
-          </div>
-        {% elif class['stats']['day_type'] == 'x' %}
-          <div class="p-2" style="background: linear-gradient(165deg, rgba(255,203,151,1) 0%, rgba(1,14,134,1) 100%)">
-            <div class="row m-1 text-center align-middle">
-              <p class="col"> {{class['stats']['day_type']}} </p>
-              <p class="col"> Number of lunches free: {{class['stats']['lunch']}} </p>
-              <p class="col"> Number of dinners free: {{class['stats']['dinner']}} </p>
-              <p class="col"> {{class['stats']['time_off']}} </p>
-            </div>
-          </div>
-        {%endif%}
+        </div>
       </a>
 
       <div id="section{{loop.index}}" class="collapse container-fluid">
         <div class="row">
           {% for section in ledger %}
-          <div class="col" style="background:#000000">
-            <p class='text-center' style="color:#ffffff"> {{section}} </p>
+          <div class="col" style="background:#343A40">
+            <p class='text-center m-2' style="color:#ffffff"> {{section}} </p>
           </div>
           {% endfor %}
         </div>
+
         <div class="row timetable-section-times">
           {% for section in class['classes']%}
           <div class='text-center col'>
             {% for time in section %}
-            <p> {{time}} <p>
+            <p class="m-2"> {{time}} <p>
               {% endfor %}
             </div>
             {% endfor %}
           </div>
         </div>
+
       </div>
       {% endfor %}
     </div>

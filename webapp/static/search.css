@@ -3,10 +3,46 @@ body {
 }
 
 .timetable-section {
-  border-radius: 25px;
+  border-width: 5px;
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+}
 
+.timetable-section:hover {
+  border-width: 5px;
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+  border-color: #007bff;
+}
+
+.timetable-section:active {
+  border-width: 5px;
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+  border-color: #004b9c;
 }
 
 .timetable-section-times {
-  background: #FFFFFF;
+  color: #000000;
+}
+
+.timetable-section-stats {
+  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+  color: #000000;
+}
+
+.m {
+  background:linear-gradient(165deg, rgba(255,235,0,1) 0%, rgba(255,171,0,1) 100%);
+}
+
+.a {
+  background: linear-gradient(165deg, rgba(122,239,255,1) 25%, rgba(30,137,255,1) 75%);
+}
+
+.e {
+  background: linear-gradient(165deg, rgba(30,137,255,1) 25%, rgba(1,14,134,1) 75%);
+}
+
+.x {
+  background: linear-gradient(165deg, rgba(255,203,151,1) 0%, rgba(1,14,134,1) 100%);
 }
