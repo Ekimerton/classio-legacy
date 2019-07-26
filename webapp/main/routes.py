@@ -12,7 +12,6 @@ def default():
 def home():
     form = SchoolForm()
     if form.validate_on_submit():
-        print(form.name.data)
         return redirect(url_for('main.search', university=form.name.data))
     return render_template("home.html", form=form)
 

@@ -3,7 +3,7 @@ from wtforms import SubmitField, SelectField, StringField
 from wtforms.validators import DataRequired, InputRequired, Optional, ValidationError
 
 class SchoolForm(FlaskForm):
-    schools = [('queens', "Queen's University")]
+    schools = [('queens', "Queen's University"), ('waterloo', 'University of Waterloo')]
     name = SelectField('Select your school', validators=[DataRequired()], choices=schools)
     submit = SubmitField('Continue')
 

@@ -3,7 +3,7 @@ import sqlite3
 # SQL/SQLite model classes
 Base = declarative_base()
 class Course(Base):
-    __tablename__ = "queens_course"
+    __tablename__ = "course"
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String)
     semester = Column('semester', String)
@@ -11,7 +11,7 @@ class Course(Base):
     variable_times = Column('variable_times', Text, unique=False)
 
 # SQLAlchemy creation
-engine = create_engine('sqlite:///queens.db')
+engine = create_engine('sqlite:///waterloo.db')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
