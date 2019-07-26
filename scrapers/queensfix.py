@@ -16,7 +16,18 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-courses = session.query(Course).filter_by(name='FILM110B').all()
+courses = session.query(Course).filter_by(name='FILM110A').first()
+print(courses.variable_times)
+print(courses.constant_times)
+
+'''
+FIX FOR FILM110A
+courses.constant_times = ""
+courses.variable_times = courses.variable_times[:len(courses.variable_times) - 1]
+session.commit()
+session.close()
+'''
+'''
 for course in courses:
     constant_t = course.constant_times
     variable_t = course.variable_times
@@ -29,3 +40,4 @@ for course in courses:
     session.commit()
 
 session.close()
+'''
