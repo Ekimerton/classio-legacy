@@ -2,6 +2,11 @@ body {
   background: #E9EBEE;
 }
 
+.no-padding {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .timetable-section {
   border-width: 5px;
   border-bottom-width: 5px;

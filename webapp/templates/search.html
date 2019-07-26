@@ -60,28 +60,30 @@
       <a data-toggle="collapse" href="#section{{loop.index}}" style="text-decoration: none">
         <div class="">
           <div class="row text" style="margin: auto">
-            <div class='col-auto text-center' style="background:#343A40;color:#ffffff">
-              <h2 class='m-2'> {{ 90 - class['stats']['score']}}% </h2>
-            </div>
-            <div class='col-3 text-center {{class['stats']['day_type']}}' style="color:#000000">
-              {%if class['stats']['day_type'] == 'm'%}
-                <h2 class="m-2">Morning</h2>
-              {%elif class['stats']['day_type'] == 'a'%}
-                <h2 class="m-2">Afternoon</h2>
-              {%elif class['stats']['day_type'] == 'e'%}
-                <h2 class="m-2">Evening</h2>
-              {%elif class['stats']['day_type'] == 'x'%}
-                <h2 class="m-2">Mixed</h2>
-              {%endif%}
+            <div class="col row">
+              <div class='col text-center' style="background:#343A40;color:#ffffff">
+                <h2 class='m-2'> {{ (25 - class['stats']['score']) * 4}}% </h2>
+              </div>
+              <div class='col text-center {{class['stats']['day_type']}}' style="color:#000000">
+                {%if class['stats']['day_type'] == 'm'%}
+                  <h2 class="m-1 pl-3 pr-3">Morning</h2>
+                {%elif class['stats']['day_type'] == 'a'%}
+                  <h2 class="m-1 pl-3 pr-3">Afternoon</h2>
+                {%elif class['stats']['day_type'] == 'e'%}
+                  <h2 class="m-1 pl-3 pr-3">Evening</h2>
+                {%elif class['stats']['day_type'] == 'x'%}
+                  <h2 class="m-1 pl-3 pr-3">Mixed</h2>
+                {%endif%}
+              </div>
             </div>
             <div class="col timetable-section-stats row" style="margin: auto">
-              <div class="col-auto text-center">
-                <p class="mb-3 mt-3"> # of lunches free: {{class['stats']['lunch']}} </p>
+              <div class="col-auto text-center" style="margin: auto">
+                <p class="mb-3 mt-3"> lunches free: {{class['stats']['lunch']}} </p>
               </div>
-              <div class="col text-center">
-                <p class="mb-3 mt-3"> # of dinners free: {{class['stats']['dinner']}} </p>
+              <div class="col-auto text-center" style="margin: auto">
+                <p class="mb-3 mt-3"> dinners free: {{class['stats']['dinner']}} </p>
               </div>
-              <div class="col-auto text-center">
+              <div class="col-auto text-center" style="margin: auto">
                 <p class="mb-3 mt-3"> Time between classes: {{class['stats']['time_off']}} </p>
               </div>
             </div>
@@ -90,24 +92,17 @@
       </a>
 
       <div id="section{{loop.index}}" class="collapse container-fluid">
-        <div class="row">
-          {% for section in ledger %}
-          <div class="col" style="background:#343A40">
-            <p class='text-center m-2' style="color:#ffffff"> {{section}} </p>
+        <div class="row timetable-section-times">
+          {% for section in class['classes']%}
+          <div class='text-center col' style="padding-left: 0; padding-right: 0">
+            <p class='p-2' style="color:#ffffff; background:#343A40"> {{ledger[loop.index - 1]}} </p>
+            {% for time in section %}
+              <p class="p-1 m-3"> {{pretty_time(time)}} <p>
+            {% endfor %}
           </div>
           {% endfor %}
         </div>
-
-        <div class="row timetable-section-times">
-          {% for section in class['classes']%}
-          <div class='text-center col'>
-            {% for time in section %}
-            <p class="m-2"> {{time}} <p>
-              {% endfor %}
-            </div>
-            {% endfor %}
-          </div>
-        </div>
+      </div>
 
       </div>
       {% endfor %}

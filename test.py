@@ -109,5 +109,7 @@ def tablify(class_list):
             table_lists.append(table_list)
         print(table_lists)
 
+def pretty_time(timestamp):
+    return timestamp[:2] + " " + timestamp[2:4] + ":" + timestamp[4:6] + "-" + timestamp[6:8] + ":" + timestamp[8:]
 
-print(tablify(result))
+print(pretty_time('Mo12301330'))

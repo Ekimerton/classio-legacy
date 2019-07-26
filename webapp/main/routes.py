@@ -16,6 +16,9 @@ def home():
         return redirect(url_for('main.search', university=form.name.data))
     return render_template("home.html", form=form)
 
+def pretty_time(timestamp):
+    return timestamp[:2] + " " + timestamp[2:4] + ":" + timestamp[4:6] + "-" + timestamp[6:8] + ":" + timestamp[8:]
+
 @main.route("/<string:university>", methods=['GET', 'POST'])
 def search(university):
     uni_dict = {'queens':"Queen's University"}
@@ -29,8 +32,9 @@ def search(university):
                 return redirect(url_for('main.search', university=university, semester=form.semester.data, classes=form.classes.data))
         if classes:
             clean_classes = classes.replace(" ", "")
+            clean_classes = clean_classes.upper()
             ledger, class_list = optimizer.parse_string(clean_classes, semester, university)
-            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=len(class_list))
+            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=len(class_list), pretty_time=pretty_time)
         return render_template("search.html", university=uni_dict[university], form=form)
     else:
         abort(404)
