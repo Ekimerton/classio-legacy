@@ -21,10 +21,10 @@ def pretty_time(timestamp):
 
 @main.route("/<string:university>", methods=['GET', 'POST'])
 def search(university):
-    uni_dict = {'queens':"Queen's University"}
+    uni_dict = {'queens':"Queen's University", 'waterloo':'University of Waterloo'}
     classes = request.args.get("classes", type=str)
     semester = request.args.get("semester", type=str)
-    if university in ['queens']:
+    if university in ['queens', 'waterloo']:
         form = ClassForm()
         if form.validate_on_submit():
             classes=form.classes.data

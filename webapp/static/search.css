@@ -32,7 +32,7 @@ body {
 }
 
 .timetable-section-stats {
-  background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
+  background: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
   color: #000000;
 }
 
