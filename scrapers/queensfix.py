@@ -16,7 +16,7 @@ Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-courses = session.query(Course).filter_by(name='CISC124').all()
+courses = session.query(Course).filter_by(name='FILM110B').all()
 for course in courses:
     constant_t = course.constant_times
     variable_t = course.variable_times

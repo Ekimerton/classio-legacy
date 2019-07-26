@@ -20,7 +20,7 @@ session = Session()
 start = int(input("Enter the last number that was parsed: "))
 semester = input("Fall, Winter or Spring? (2019/2020): ")
 if not semester in ['Fall', 'Winter', 'Spring']:
-    print("Please enter 'Fall' or 'Winter'")
+    print("Please enter a semester")
     exit()
 semester_dict = {'Spring':'1195', 'Fall':'1199', 'Winter':'1201'}
 sem = semester_dict[semester]

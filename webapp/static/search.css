@@ -37,17 +37,17 @@ body {
 }
 
 .m {
-  background:linear-gradient(165deg, rgba(255,235,0,1) 0%, rgba(255,171,0,1) 100%);
+  background: radial-gradient(circle, rgba(225,248,255,1) 0%, rgba(110,176,228,1) 100%);
 }
 
 .a {
-  background: linear-gradient(165deg, rgba(122,239,255,1) 25%, rgba(30,137,255,1) 75%);
+  background: radial-gradient(circle, rgba(255,224,145,1) 0%, rgba(205,79,120,1) 100%);
 }
 
 .e {
-  background: linear-gradient(165deg, rgba(30,137,255,1) 25%, rgba(1,14,134,1) 75%);
+  background: radial-gradient(circle, rgba(132,183,237,1) 0%, rgba(10,5,102,1) 100%);
 }
 
 .x {
-  background: linear-gradient(165deg, rgba(255,230,193,1) 0%, rgba(158,40,40,1) 100%);
+  background: radial-gradient(circle, rgba(151,195,249,1) 0%, rgba(193,79,205,1) 100%);
 }

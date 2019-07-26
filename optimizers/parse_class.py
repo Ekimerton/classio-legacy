@@ -73,28 +73,32 @@ def parseClass(course):
     return Course(course.name, course.semester, constant_t, variable_t)
 
 def searchClass(name, semester, school):
-    engine = create_engine('sqlite:///scrapers/{}.db'.format(school))
-    Base.metadata.create_all(bind=engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    class_list = []
-    try:
-        courses = session.query(CourseDB).filter_by(name=name, semester=semester).first()
-        class_list.append(parseClass(courses))
-    except:
+    if school in ['queens']:
+        engine = create_engine('sqlite:///scrapers/{}.db'.format(school))
+        Base.metadata.create_all(bind=engine)
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        class_list = []
+        try:
+            courses = session.query(CourseDB).filter_by(name=name, semester=semester).first()
+            class_list.append(parseClass(courses))
+        except:
+            pass
+        try:
+            courses = session.query(CourseDB).filter_by(name=name+'A', semester=semester).first()
+            class_list.append(parseClass(courses))
+        except:
+            pass
+        try:
+            courses = session.query(CourseDB).filter_by(name=name+'B', semester=semester).first()
+            class_list.append(parseClass(courses))
+        except:
+            pass
+        session.close()
+        return class_list
+    else:
+        #create method for direct api calls, for unis that allow it!
         pass
-    try:
-        courses = session.query(CourseDB).filter_by(name=name+'A', semester=semester).first()
-        class_list.append(parseClass(courses))
-    except:
-        pass
-    try:
-        courses = session.query(CourseDB).filter_by(name=name+'B', semester=semester).first()
-        class_list.append(parseClass(courses))
-    except:
-        pass
-    session.close()
-    return class_list
 
 def parse_request(request_string, semester, school):
     class_list = []
