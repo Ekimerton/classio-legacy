@@ -1,26 +1,83 @@
-import sqlite3
+import requests
+import os
+from bs4 import BeautifulSoup
 
-# SQL/SQLite model classes
-Base = declarative_base()
-class Course(Base):
-    __tablename__ = "course"
-    id = Column('id', Integer, primary_key=True)
-    name = Column('name', String)
-    semester = Column('semester', String)
-    constant_times = Column('constant_times', Text, unique=False)
-    variable_times = Column('variable_times', Text, unique=False)
+class Course():
+    def __init__(self, nme, sem, constant_t, variable_t):
+        self.name = nme
+        self.semester = sem
+        self.constant_times = constant_t
+        self.variable_times = variable_t
+    def __str__(self):
+        return self.name + " " + self.semester + "\n" + str(self.constant_times) + "\n" + str(self.variable_times)
 
-# SQLAlchemy creation
-engine = create_engine('sqlite:///waterloo.db')
-Base.metadata.create_all(bind=engine)
-Session = sessionmaker(bind=engine)
-session = Session()
+def format_time(time_string):
+    #do this bruh
+    pass
 
-# start index
-start = int(input("Enter the last number that was parsed: "))
-semester = input("Fall, Winter or Spring? (2019/2020): ")
-if not semester in ['Fall', 'Winter', 'Spring']:
-    print("Please enter a semester")
-    exit()
-semester_dict = {'Spring':'1195', 'Fall':'1199', 'Winter':'1201'}
-sem = semester_dict[semester]
+def find_class(semester, course):
+    semester_dict = {'S':'1195', 'F':'1199', 'W':'1201'}
+    with requests.Session() as c:
+        for idx, char in enumerate(course):
+            if char.isdigit():
+                break
+        subject = (course[:idx])
+        cournum = (course[idx:])
+        query_url = "http://www.adm.uwaterloo.ca/cgi-bin/cgiwrap/infocour/salook.pl"
+        sess = semester_dict[semester]
+        query_data = dict(level="under", sess=sess, subject=subject, cournum=cournum)
+
+        post = c.post(query_url, data=query_data)
+        print("Connection made")
+        soup = BeautifulSoup(post.content, 'xml')
+        #print(returned_html)
+
+        #print(soup.prettify())
+        #print("---------")
+
+        find_error = str(soup.find('B'))
+        if find_error == '<B>Sorry, but your query had no matches.</B>':
+            return None
+
+        tables = soup.find_all('TABLE')
+        table = tables[1]
+        #print(table.prettify())
+        rows = table.find_all('TR')
+        times = []
+        for row in rows:
+            cols = row.find_all('TD')
+            try:
+                section_type = cols[1].get_text()[:3]
+                if section_type == "":
+                    continue
+                section_time_str = cols[10].get_text()[:11]
+                #print("------------------")
+                #print(section_type, section_time_str)
+
+                # Add read for days and fix time format
+                #for char in cols[10].get_text():
+                #    if char
+
+                section_exists = False
+                for time_section in times:
+                    if section_type == time_section[0]:
+                        time_section.append(section_time_str)
+                        section_exists = True
+                        break
+                if not section_exists:
+                    time_section = [section_type, section_time_str]
+                    times.append(time_section)
+            except:
+                pass
+        constant_times = []
+        variable_times = []
+        for time_section in times:
+            if len(time_section) == 2:
+                constant_times.append(time_section)
+            else:
+                variable_times.append(time_section)
+        print(constant_times)
+        print(variable_times)
+
+
+find_class("F", "CS135")
