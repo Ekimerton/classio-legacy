@@ -86,15 +86,28 @@ def calculate_offtime(day):
         return ((offtime - 70)/100) + 0.5
     return offtime
 '''
-
 import optimizers.optimizer as optimizer
 
-result = optimizer.parse_string("CISC121,CISC124", 'F', 'queens')
-#result = optimizer.parse_string("CISC221,CISC223,CISC235,CISC271,CLST205", 'W', 'queens')
+ledger, result = optimizer.parse_string("CISC121,CISC124,MATH121", 'F', 'queens')
+#result = optimizer.parse_string("CISC221,CISC223,CISC235,CISC271,CLST205", 'W', 'queens'
+
+def tablify(class_list):
+    table_lists = []
+    for timetable in class_list:
+        l = len(timetable['classes'])
+        mx = 0
+        for cls in timetable['classes']:
+            mx = max(mx, len(cls))
+        #print(l, mx)
+        for i in range(0, mx):
+            table_list = [["" for x in range(mx)] for y in range(l)]
+            for j in range(0, l):
+                try:
+                    table_list[j][i] = class_list[i][j]
+                except:
+                    table_list[j][i] = ""
+            table_lists.append(table_list)
+        print(table_lists)
 
 
-print(result[0])
-print("----------------------------")
-for r in result[1]:
-    print(r)
-    print("----------------------------")
+print(tablify(result))

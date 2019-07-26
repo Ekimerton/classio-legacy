@@ -61,7 +61,6 @@ engine = create_engine('sqlite:///queens.db')
 Base.metadata.create_all(bind=engine)
 Session = sessionmaker(bind=engine)
 session = Session()
-#session.rollback()
 
 # start index
 start = int(input("Enter the last number that was parsed: "))
