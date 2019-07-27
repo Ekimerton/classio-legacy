@@ -33,7 +33,7 @@ def search(university):
             clean_classes = classes.replace(" ", "")
             clean_classes = clean_classes.upper()
             ledger, class_list = optimizer.parse_string(clean_classes, semester, university)
-            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=len(class_list), pretty_time=pretty_time)
+            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=len(class_list), pretty_time=pretty_time, round=round)
         return render_template("search.html", university=uni_dict[university], form=form)
     else:
         abort(404)

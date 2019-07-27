@@ -35,7 +35,7 @@ def calculate_offtime(day):
     for timeframe in day:
         starth = timeframe[:2]
         startm = timeframe[2:4]
-        offtime += (int(starth) - int(endh)) + ((int(startm) - int(endm)) / 6)
+        offtime += (int(starth) - int(endh)) - ((int(startm) - int(endm)) / 6)
         endh = timeframe[4:6]
         endm = timeframe[6:]
     return offtime
@@ -113,7 +113,7 @@ def analyze_timetable(timetable):
             dinner_free+=1
     day_type = max(set(day_types), key=day_types.count)
     score = time_in_between + 3*(5 - lunch_free) + 3*(5 - dinner_free)
-    return {'score':score, 'day_type':day_type, 'lunch':lunch_free, 'dinner':dinner_free, 'time_off':time_in_between}
+    return {'score':score, 'day_type':day_type, 'lunch':lunch_free, 'dinner':dinner_free, 'time_off':round(time_in_between, 2)}
 
 def parse_string(classes, semester, school):
     ledger, permutations = get_permutations(classes, semester, school)
