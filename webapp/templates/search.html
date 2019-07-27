@@ -33,7 +33,7 @@
             {% endif %}
             <small> Enter your classes as: CLAS101,CLAS102,CLAS103... </small>
           </div>
-          <div class="form-group col-2">
+          <div class="form-group col-auto">
             {{ form.semester.label(class="form-control-label")}}
             {% if form.semester.errors %}
             {{ form.semester(class="form-control form-control-lg is-invalid") }}
@@ -68,7 +68,7 @@
             {%if class['stats']['day_type'] == 'm'%}
               <h2 class="p-1 pl-3 pr-3">Morning</h2>
             {%elif class['stats']['day_type'] == 'a'%}
-              <h2 class="p-1 pl-3 pr-3">Afternoon</h2>
+              <h2 class="p-1 pl-3 pr-3">Noon</h2>
             {%elif class['stats']['day_type'] == 'e'%}
               <h2 class="p-1 pl-3 pr-3">Evening</h2>
             {%elif class['stats']['day_type'] == 'x'%}
