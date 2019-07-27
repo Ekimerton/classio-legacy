@@ -75,7 +75,6 @@ def parseClass(course):
 
 def searchClass(name, semester, school):
     if school in ['queens']:
-        print(school)
         engine = create_engine('sqlite:///scrapers/{}.db'.format(school))
         Base.metadata.create_all(bind=engine)
         Session = sessionmaker(bind=engine)

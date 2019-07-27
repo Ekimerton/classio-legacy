@@ -99,7 +99,6 @@ def find_class(semester, course):
                 if section_type == "" or section_type == "&nb":
                     continue
                 section_time_str = format_time(cols[10].get_text())
-                print(section_time_str)
                 section_exists = False
                 for time_section in times:
                     if section_type == time_section[0]:
