@@ -9,5 +9,5 @@ class SchoolForm(FlaskForm):
 
 class ClassForm(FlaskForm):
     classes = StringField("Enter your classes, seperated with a comma:", validators=[DataRequired()])
-    semester = SelectField('Semester', validators=[DataRequired()], choices=[('F', 'Fall'), ('W', 'Winter'), ('S', 'Summer')])
+    semester = SelectField('Sem', validators=[DataRequired()], choices=[('F', 'Fall'), ('W', 'Winter'), ('S', 'Summer')])
     submit = SubmitField('Optimize')
