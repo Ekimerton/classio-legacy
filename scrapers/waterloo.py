@@ -1,6 +1,7 @@
 import requests
 import os
 from bs4 import BeautifulSoup
+import lxml
 
 class Course():
     def __init__(self, nme, sem, constant_t, variable_t):
@@ -76,23 +77,23 @@ def find_class(semester, course):
         query_data = dict(level="under", sess=sess, subject=subject, cournum=cournum)
 
         post = c.post(query_url, data=query_data)
-        soup = BeautifulSoup(post.content, 'xml')
+        soup = BeautifulSoup(post.content, 'lxml')
         #print(returned_html)
 
         #print(soup.prettify())
         #print("---------")
 
-        find_error = str(soup.find('B'))
+        find_error = str(soup.find('b'))
         if find_error == '<B>Sorry, but your query had no matches.</B>':
             return None
 
-        tables = soup.find_all('TABLE')
+        tables = soup.find_all('table')
         table = tables[1]
         #print(table.prettify())
-        rows = table.find_all('TR')
+        rows = table.find_all('tr')
         times = []
         for row in rows:
-            cols = row.find_all('TD')
+            cols = row.find_all('td')
             try:
                 section_type = cols[1].get_text()[:3]
                 if section_type == "":
@@ -118,6 +119,3 @@ def find_class(semester, course):
             else:
                 variable_times.append(time_section)
         return Course(course, semester, constant_times, variable_times)
-
-
-find_class("F", "CS135")
