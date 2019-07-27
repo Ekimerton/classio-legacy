@@ -3,3 +3,5 @@ WTForms==2.2.1
 Flask==1.0.2
 Flask_WTF==0.14.2
 gunicorn==19.9.0
+requests==2.21.0
+beautifulsoup4==4.8.0
