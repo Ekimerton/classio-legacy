@@ -11,9 +11,57 @@ class Course():
     def __str__(self):
         return self.name + " " + self.semester + "\n" + str(self.constant_times) + "\n" + str(self.variable_times)
 
+def mergeCopies(times_list):
+    new_list = []
+    for i in range(0, len(times_list)):
+        for j in range(i, len(times_list)):
+            if times_list[i][0] == times_list[j][0] and i != j:
+                name = times_list[i][0]
+                old_times_list = times_list[j]
+                del old_times_list[0]
+                del times_list[i][0]
+                times_list[i] = times_list[i] + old_times_list
+                b_set = set(tuple(x) for x in times_list[i])
+                times_list[i] = [list(x) for x in b_set]
+                times_list[i].insert(0, name)
+                del times_list[j]
+
+def format_hour(hour_string):
+    hour = int(hour_string[:2])
+    if hour < 7:
+        return str(hour+12) + hour_string[2:]
+    else:
+        return hour_string
+
 def format_time(time_string):
-    #do this bruh
-    pass
+    times = []
+    hour = time_string[:11]
+    day = ""
+    #print(time_string[11:])
+    for c in time_string[11:]:
+        if c.isalpha:
+            day += c
+    hour = hour.replace(":", "")
+    start, end = hour.split("-")
+    hour = format_hour(start) + format_hour(end)
+    for idx, c in enumerate(day):
+        if c == 'M':
+            times.append("Mo" + hour)
+        if c == 'W':
+            times.append("We" + hour)
+        if c == "F":
+            times.append("Fr" + hour)
+        if c == "T":
+            try:
+                if day[idx + 1] == 'h':
+                    times.append("Th" + hour)
+                else:
+                    times.append("Tu" + hour)
+            except:
+                times.append("Tu" + hour)
+
+    return times
+
 
 def find_class(semester, course):
     semester_dict = {'S':'1195', 'F':'1199', 'W':'1201'}
@@ -28,7 +76,6 @@ def find_class(semester, course):
         query_data = dict(level="under", sess=sess, subject=subject, cournum=cournum)
 
         post = c.post(query_url, data=query_data)
-        print("Connection made")
         soup = BeautifulSoup(post.content, 'xml')
         #print(returned_html)
 
@@ -50,20 +97,14 @@ def find_class(semester, course):
                 section_type = cols[1].get_text()[:3]
                 if section_type == "":
                     continue
-                section_time_str = cols[10].get_text()[:11]
-                #print("------------------")
-                #print(section_type, section_time_str)
-
-                # Add read for days and fix time format
-                #for char in cols[10].get_text():
-                #    if char
-
+                section_time_str = format_time(cols[10].get_text())
                 section_exists = False
                 for time_section in times:
                     if section_type == time_section[0]:
-                        time_section.append(section_time_str)
                         section_exists = True
-                        break
+                        if not section_time_str in time_section:
+                            time_section.append(section_time_str)
+                            continue
                 if not section_exists:
                     time_section = [section_type, section_time_str]
                     times.append(time_section)
@@ -76,8 +117,7 @@ def find_class(semester, course):
                 constant_times.append(time_section)
             else:
                 variable_times.append(time_section)
-        print(constant_times)
-        print(variable_times)
+        return Course(course, semester, constant_times, variable_times)
 
 
 find_class("F", "CS135")

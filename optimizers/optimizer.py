@@ -30,17 +30,14 @@ def check_timetable(timetable):
 # Calculates the amount of time inbetween classes for a day
 def calculate_offtime(day):
     offtime = 0
-    end = day[0][:4]
+    endh = day[0][:2]
+    endm = day[0][2:4]
     for timeframe in day:
-        start = timeframe[:4]
-        offtime += int(start) - int(end)
-        end = timeframe[4:]
-    if offtime % 100 == 0:
-        return offtime/100
-    elif offtime % 100 == 30:
-        return ((offtime - 30)/100) + 0.5
-    elif offtime % 100 == 70:
-        return ((offtime - 70)/100) + 0.5
+        starth = timeframe[:2]
+        startm = timeframe[2:4]
+        offtime += (int(starth) - int(endh)) + ((int(startm) - int(endm)) / 6)
+        endh = timeframe[4:6]
+        endm = timeframe[6:]
     return offtime
 
 # Returns all possible permutations

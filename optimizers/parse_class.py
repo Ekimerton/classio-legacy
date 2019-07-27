@@ -1,6 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import sessionmaker
+import scrapers.waterloo  as waterloo
 
 Base = declarative_base()
 class CourseDB(Base):
@@ -74,6 +75,7 @@ def parseClass(course):
 
 def searchClass(name, semester, school):
     if school in ['queens']:
+        print(school)
         engine = create_engine('sqlite:///scrapers/{}.db'.format(school))
         Base.metadata.create_all(bind=engine)
         Session = sessionmaker(bind=engine)
@@ -96,9 +98,15 @@ def searchClass(name, semester, school):
             pass
         session.close()
         return class_list
-    else:
-        #create method for direct api calls, for unis that allow it!
-        pass
+    elif school == "waterloo":
+        class_list = []
+        try:
+            result = waterloo.find_class(semester, name)
+            if result:
+                class_list.append(result)
+        except:
+            pass
+        return class_list
 
 def parse_request(request_string, semester, school):
     class_list = []
