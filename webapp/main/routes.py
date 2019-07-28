@@ -23,6 +23,7 @@ def search(university):
     uni_dict = {'queens':"Queen's University", 'waterloo':'University of Waterloo'}
     classes = request.args.get("classes", type=str)
     semester = request.args.get("semester", type=str)
+    page = request.args.get("page", type=int)
     if university in ['queens', 'waterloo']:
         form = ClassForm()
         if form.validate_on_submit():
@@ -33,7 +34,7 @@ def search(university):
             clean_classes = classes.replace(" ", "")
             clean_classes = clean_classes.upper()
             ledger, class_list = optimizer.parse_string(clean_classes, semester, university)
-            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=len(class_list), pretty_time=pretty_time, round=round)
+            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list[:100], ledger=ledger, len=len(class_list), pretty_time=pretty_time, round=round)
         return render_template("search.html", university=uni_dict[university], form=form)
     else:
         abort(404)
