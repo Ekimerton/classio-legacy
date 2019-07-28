@@ -35,7 +35,7 @@ def calculate_offtime(day):
     for timeframe in day:
         starth = timeframe[:2]
         startm = timeframe[2:4]
-        offtime += (int(starth) - int(endh)) - ((int(startm) - int(endm)) / 6)
+        offtime += (int(starth) - int(endh)) + ((int(startm) - int(endm)) / 60)
         endh = timeframe[4:6]
         endm = timeframe[6:]
     return offtime
