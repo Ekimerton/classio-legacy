@@ -96,7 +96,7 @@ def find_class(semester, course):
             cols = row.find_all('td')
             try:
                 section_type = cols[1].get_text()[:3]
-                if section_type == "" or section_type == "&nb":
+                if section_type == "" or section_type == "&nb" or section_type == ‘TST:
                     continue
                 section_time_str = format_time(cols[10].get_text())
                 section_exists = False
