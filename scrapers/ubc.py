@@ -13,4 +13,20 @@ class Course():
         return self.name + " " + self.semester + "\n" + str(self.constant_times) + "\n" + str(self.variable_times)
 
 def find_class(semester, course):
-    semester_dict = {'S':'1195', 'F':'1199', 'W':'1201'}
+    semester_dict = {'S':'None', 'F':'Term 1', 'W':'Term 2'}
+    with requests.Session() as c:
+        for idx, char in enumerate(course):
+            if char.isdigit():
+                break
+        subject = (course[:idx])
+        cournum = (course[idx:])
+        # THIS DOESNT WORK WTF
+        query_url = "https://courses.students.ubc.ca/cs/courseschedule?pname=subjarea&tname=subj-course&dept={}&course={}".format(subject, cournum)
+        post = c.post(query_url)
+        soup = BeautifulSoup(post.content, 'lxml')
+        #print(returned_html)
+
+        print(soup.prettify())
+        #print("---------")
+
+find_class('F', "BIOL234")

@@ -13,8 +13,11 @@
 </head>
   <body>
     <div class="jumbotron container mt-4" style="background:#ffffff">
-      <h1 class='text-center'> <a href="{{url_for('main.home')}}"> classio</a> • {{university}} </h1>
-      <h2 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a> (W.I.P!)</h2>
+      <div class="text-center" id="intro">
+        <h1 class='text-center'> <a href="{{url_for('main.home')}}"> classio</a> • {{university}} </h1>
+        <h2 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a> (W.I.P!)</h2>
+        <small> Find the code for this website <a href="https://github.com/Ekimerton/classio"> here </a> </small>
+      </div>
       <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group">
