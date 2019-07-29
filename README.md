@@ -26,3 +26,13 @@ Reads the classes from the stored format, fixes any repeats (since whoever organ
 ### Optimizer
 First, get the permutations of each class (CISC121: CV1W1, CV2W1, CV1W2, CV2W2)
 Then, each permutation is looped through, checking for (and ignoring) conflicts, also testing for the earliest, latest and least time in between.
+
+## Scrapers
+Real quick list of university rankings
+ Waterloo - S
+ UBC - B
+ Queen's - D (passed but nothing to be proud of)
+
+* Waterloo has a solid api, which is down! Data is scraped with requests and BeautifulSoup.
+* UBC is yet to be seen, but it looks like they might need me to use selenium, though much less then Queen's from not needing to log in!
+* Queen's right now works by me logging in, letting selenium loose, and waiting for an hour or two to scrape all the data. Not only is it user-intensive, it requires my half-attention for any debugging. The process of searching for a class is very slow, so the database is usually old. However, it seems like Queen's doesnt update course info often anyway.
