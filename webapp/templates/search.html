@@ -99,7 +99,7 @@
               <div class="row timetable-section-times">
                 {% for section in class['classes']%}
                 <div class='text-center col' style="padding-left: 0; padding-right: 0">
-                  <p class='p-2' style="color:#ffffff; background:#343A40"> {{ledger[loop.index - 1]}} </p>
+                  <a href="#" data-toggle="tooltip" title="SECTION NUM GOES HERE"><p class='p-2' style="color:#ffffff; background:#343A40"> {{ledger[loop.index - 1]}} </p></a>
                   {% for time in section %}
                     <p class="p-1 m-3"> {{pretty_time(time)}} <p>
                   {% endfor %}
@@ -113,5 +113,10 @@
       {% endfor %}
     </div>
     {% endif %}
+    <script>
+      $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    </script>
   </body>
 </html>
