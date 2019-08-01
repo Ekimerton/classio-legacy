@@ -9,8 +9,6 @@ import sqlite3
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-# TODO: FIX (FOR THE NEXT READ) THAT THE FINAL 0 IS CUT FROM SECTION TYPE
-# TODO: Add support for class numbers!
 # TODO: Change scraper to scrape all classes, open or closed!
 #Setup
 
@@ -92,7 +90,9 @@ element = browser.find_element_by_name('_eventId_proceed')
 element.click()
 
     # Goes to course search
-for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall, 143 for winter)
+flip_flop = True
+i = start
+while i < 136: #Replace this 136 with a dynamic range (136 for fall, 143 for winter)
 
     browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
     wait = WebDriverWait(browser, 30)
@@ -116,9 +116,7 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
         if count == i:
             option.click()
             print(option.text + ": " + str(i))
-
         count+=1
-
     # Set search options
     element = browser.find_element_by_id('SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1')
     element.send_keys("c")
@@ -136,12 +134,27 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
     if element.is_selected():
         element.click()
 
+    # Hot-fix for classes who have more than 200 sections.
+    hot_fix = [5]
+    split_point = {5:'150'}
+    if i in hot_fix:
+        element = browser.find_element_by_id('SSR_CLSRCH_WRK_CATALOG_NBR$1')
+        element.send_keys(split_point[i])
+        element = browser.find_element_by_id('SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1')
+        if flip_flop:
+            element.send_keys("l")
+            i = i - 1
+        else:
+            element.send_keys("g")
+
+        flip_flop = not flip_flop
+    i+= 1
     # Click search
     element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH')
     element.click()
 
     try:
-        wait = WebDriverWait(browser, 30)
+        wait = WebDriverWait(browser, 15)
         wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_SSR_PB_MODIFY$5$')))
         print("    read successfully")
     except:
@@ -150,6 +163,8 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
             continue
         else:
             print("    Unknown error, query returned neither a proper page nor a 'not found'")
+            print(i)
+            exit()
 
     for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
         title = classDiv.find_element_by_tag_name('a').get_attribute('title')
@@ -166,10 +181,11 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
                 if sectionID_tag != old_sectionID_tag:
                     times = times[:len(times) - 1]
                     times += "-" + sectionID_tag + ":"
+                class_num = section.find_element_by_xpath(".//a[starts-with(@id,'MTG_CLASS_NBR$')]").text
                 timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
                 timeslot = ", ".join(timeslot.splitlines())
                 timeslot = standardizeTime(timeslot)
-                times += timeslot + ";" #PROBLEM IS AROUND HERE
+                times += class_num + "?" + timeslot + ";"
 
             times = times[1:len(times) - 1] #Removes trailing '-' and leading ';'
 
