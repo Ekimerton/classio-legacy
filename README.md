@@ -16,9 +16,11 @@ Variable Times: ...
 
 This format is used both in the raw read, and after section types are separated into variable and constant
 
+**new addition: section types separated by ';' now contain the section number first numb?... The number ends with a question mark**
+
 LEC:Mo12301330,We11301230,Th13301430
 Constant Times: LEC:Mo12301330,We11301230,Th13301430
-Variable Times: LAB:We15301730,Mo18302030,Tu18302030,Fr15301730,Th1430-1630; ...
+Variable Times: LAB:2112?We15301730,Mo18302030;1212?We11301230,Mo17301830 ...
 
 ### Parse_class
 Reads the classes from the stored format, fixes any repeats (since whoever organized the queen's db didnt!) andreturns a list of **course** objects. The main method is parse_request, all other methods are *'helpers'*.

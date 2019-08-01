@@ -10,6 +10,8 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 # TODO: FIX (FOR THE NEXT READ) THAT THE FINAL 0 IS CUT FROM SECTION TYPE
+# TODO: Add support for class numbers!
+# TODO: Change scraper to scrape all classes, open or closed!
 #Setup
 
     # Helper Methods
@@ -49,7 +51,7 @@ def standardizeTime(init_time):
     # SQL/SQLite model classes
 Base = declarative_base()
 class Course(Base):
-    __tablename__ = "queens_course"
+    __tablename__ = "course"
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String)
     semester = Column('semester', String)
@@ -104,6 +106,7 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
                 option.click()
                 break
 
+        #REPLACING THIS WOULD MAKE THIS MUCH MUCH QUICKER
         time.sleep(5)
 
     # Set subject type
@@ -129,11 +132,16 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
     element.send_keys("m")
     element = browser.find_element_by_id('SSR_CLSRCH_WRK_INSTRUCTION_MODE$4')
     element.send_keys("i")
+    element = browser.find_element_by_id('SSR_CLSRCH_WRK_SSR_OPEN_ONLY$5')
+    if element.is_selected():
+        element.click()
+
+    # Click search
     element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH')
     element.click()
 
     try:
-        wait = WebDriverWait(browser, 15)
+        wait = WebDriverWait(browser, 30)
         wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_SSR_PB_MODIFY$5$')))
         print("    read successfully")
     except:
@@ -156,7 +164,7 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
                 sectionID = sectionID[0:sectionID.index('<')]
                 sectionID_tag = sectionID[(sectionID.index('-') + 1):]
                 if sectionID_tag != old_sectionID_tag:
-                    times = times[:len(times) - 2]
+                    times = times[:len(times) - 1]
                     times += "-" + sectionID_tag + ":"
                 timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
                 timeslot = ", ".join(timeslot.splitlines())
@@ -174,11 +182,16 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
                 else:
                     constant_t += sectionType + "-"
             if constant_t:
-                constant_t = constant_t[:len(constant_t) - 2]
+                constant_t = constant_t[:len(constant_t) - 1]
             if variable_t:
-                variable_t = variable_t[:len(variable_t) - 2]
+                variable_t = variable_t[:len(variable_t) - 1]
 
             exists = False
+
+            # print for testing!
+            print(title, semester[0])
+            print(constant_t)
+            print(variable_t)
             try:
                 q = session.query(Course).filter(Course.name == title, Course.semester == semester[0]).first()
                 if q.name == title and q.semester == semester[0]:
@@ -187,12 +200,13 @@ for i in range(start, 143): #Replace this 136 with a dynamic range (136 for fall
             except:
                 pass
             if not exists:
-                course = Course()
-                course.name = title
-                course.constant_times = constant_t
-                course.variable_times = variable_t
-                course.semester = semester[0]
-                session.add(course)
+                # Adding the course to the db!
+                #course = Course()
+                #course.name = title
+                #course.constant_times = constant_t
+                #course.variable_times = variable_t
+                #course.semester = semester[0]
+                #session.add(course)
                 try:
                     session.commit()
                 except:
