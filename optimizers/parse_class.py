@@ -5,7 +5,7 @@ import scrapers.waterloo  as waterloo
 
 Base = declarative_base()
 class CourseDB(Base):
-    __tablename__ = "queens_course"
+    __tablename__ = "course"
     id = Column('id', Integer, primary_key=True)
     name = Column('name', String)
     semester = Column('semester', String)
@@ -36,6 +36,7 @@ def mergeCopies(times_list):
                 times_list[i].insert(0, name)
                 del times_list[j]
 
+# Change this to work with class number!
 def parseClass(course):
     constant_t = []
     variable_t = []
@@ -45,6 +46,8 @@ def parseClass(course):
             section_name = type[:type.index(':')]
             type = type[type.index(':') + 1:]
             for choice in type.split(';'):
+                # Add dict for class num and times
+                choice = choice[choice.index('?') + 1:]
                 date_list = []
                 for date in choice.split(','):
                     date_list.append(date)
@@ -61,6 +64,7 @@ def parseClass(course):
             section_name = type[:type.index(':')]
             type = type[type.index(':') + 1:]
             for choice in type.split(';'):
+                choice = choice[choice.index('?') + 1:]
                 date_list = []
                 for date in choice.split(','):
                     date_list.append(date)
@@ -111,4 +115,5 @@ def parse_request(request_string, semester, school):
     class_list = []
     for class_name in request_string.split(','):
         class_list += searchClass(class_name, semester, school)
+    print(class_list)
     return class_list

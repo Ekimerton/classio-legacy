@@ -92,7 +92,7 @@ element.click()
     # Goes to course search
 flip_flop = True
 i = start
-while i < 136: #Replace this 136 with a dynamic range (136 for fall, 143 for winter)
+while i < 143: #Replace this 136 with a dynamic range (142 for fall, 143 for winter)
 
     browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
     wait = WebDriverWait(browser, 30)
@@ -107,7 +107,7 @@ while i < 136: #Replace this 136 with a dynamic range (136 for fall, 143 for win
                 break
 
         #REPLACING THIS WOULD MAKE THIS MUCH MUCH QUICKER
-        time.sleep(5)
+        time.sleep(7)
 
     # Set subject type
     element = browser.find_element_by_id('SSR_CLSRCH_WRK_SUBJECT_SRCH$0')
@@ -205,9 +205,9 @@ while i < 136: #Replace this 136 with a dynamic range (136 for fall, 143 for win
             exists = False
 
             # print for testing!
-            print(title, semester[0])
-            print(constant_t)
-            print(variable_t)
+            #print(title, semester[0])
+            #print(constant_t)
+            #print(variable_t)
             try:
                 q = session.query(Course).filter(Course.name == title, Course.semester == semester[0]).first()
                 if q.name == title and q.semester == semester[0]:
@@ -217,12 +217,12 @@ while i < 136: #Replace this 136 with a dynamic range (136 for fall, 143 for win
                 pass
             if not exists:
                 # Adding the course to the db!
-                #course = Course()
-                #course.name = title
-                #course.constant_times = constant_t
-                #course.variable_times = variable_t
-                #course.semester = semester[0]
-                #session.add(course)
+                course = Course()
+                course.name = title
+                course.constant_times = constant_t
+                course.variable_times = variable_t
+                course.semester = semester[0]
+                session.add(course)
                 try:
                     session.commit()
                 except:

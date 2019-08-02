@@ -1,3 +1,12 @@
+Base = declarative_base()
+class Course(Base):
+    __tablename__ = "course"
+    id = Column('id', Integer, primary_key=True)
+    name = Column('name', String)
+    semester = Column('semester', String)
+    constant_times = Column('constant_times', Text, unique=False)
+    variable_times = Column('variable_times', Text, unique=False)
+
 def hour12to24(timestamp):
     ep_index = timestamp.index(":")
     hour = int(timestamp[:ep_index])
@@ -86,6 +95,7 @@ def calculate_offtime(day):
         return ((offtime - 70)/100) + 0.5
     return offtime
 '''
+'''
 import optimizers.optimizer as optimizer
 
 ledger, result = optimizer.parse_string("CISC121,CISC124,MATH121", 'F', 'queens')
@@ -113,3 +123,4 @@ def pretty_time(timestamp):
     return timestamp[:2] + " " + timestamp[2:4] + ":" + timestamp[4:6] + "-" + timestamp[6:8] + ":" + timestamp[8:]
 
 print(pretty_time('Mo12301330'))
+'''
