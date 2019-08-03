@@ -46,8 +46,7 @@
               {% else %}
               {{ form.classes(class="form-control form-control-lg") }}
               {% endif %}
-              <small> Enter your classes as: CLAS101,CLAS102,CLAS103... </small> </br>
-              <small> <b> New!</b> A new (better) read of classes has fixed any errors you might have encountered with any class times! Class numbers coming soon! </small>
+              <small> Enter your classes as: CLAS101,CLAS102,CLAS103... </small>
             </div>
             <div class="form-group col-auto">
               {{ form.semester.label(class="form-control-label")}}
@@ -66,6 +65,7 @@
         </fieldset>
         {{ form.submit(class="btn btn-dark col") }}
       </form>
+      <small> <b> New!</b> A new (better) read of classes has fixed any errors you might have encountered with any class times! Class numbers coming soon! </small>
     </div>
 
     {% if class_list is defined and ledger is defined %}
@@ -112,7 +112,7 @@
               <div class="row timetable-section-times">
                 {% for section in class['classes']%}
                 <div class='text-center col' style="padding-left: 0; padding-right: 0">
-                  <a href="#" data-toggle="tooltip" title="Class num goes here (W.I.P!)"><p class='p-2' style="color:#ffffff; background:#343A40"> {{ledger[loop.index - 1]}} </p></a>
+                  <a href="" data-toggle="tooltip" title="Class num goes here (W.I.P!)"><p class='p-2' style="color:#ffffff; background:#343A40"> {{ledger[loop.index - 1]}} </p></a>
                   {% for time in section %}
                     <p class="p-1 m-3"> {{pretty_time(time)}} <p>
                   {% endfor %}
