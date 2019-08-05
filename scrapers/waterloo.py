@@ -98,7 +98,11 @@ def find_class(semester, course):
                 section_type = cols[1].get_text()[:3]
                 if section_type == "" or section_type == "&nb" or section_type == "TST":
                     continue
-                section_time_str = format_time(cols[10].get_text())
+                class_num = cols[0].get_text().replace(" ", "")
+                sec_time_str = format_time(cols[10].get_text())
+                section_time_str = []
+                section_time_str.append(class_num)
+                section_time_str += sec_time_str
                 section_exists = False
                 for time_section in times:
                     if section_type == time_section[0]:

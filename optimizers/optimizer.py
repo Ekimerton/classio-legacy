@@ -27,7 +27,7 @@ def check_timetable(timetable):
                 return False
     return True
 
-# Calculates the amount of time inbetween classes for a day
+# Calculates the amount of time in between classes for a day
 def calculate_offtime(day):
     offtime = 0
     endh = day[0][:2]
@@ -69,10 +69,18 @@ def get_permutations(classes, semester, school):
         permutations.append(schedule)
     return ledger, permutations
 
+def flatten_table(timetable):
+    flat_list = []
+    for sublist in timetable:
+        for item in range(1, len(sublist)):
+            flat_list.append(sublist[item])
+    return flat_list
+
 # Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
 def analyze_timetable(timetable):
     #First flatten
-    flat_list = [item for sublist in timetable for item in sublist]
+    #flat_list = [[item for sublist in timetable for item in sublist]]
+    flat_list = flatten_table(timetable)
     #Sort into lists for Mo, Tu, We, Th, Fr
     day_dict = {'Mo':[], 'Tu':[], 'We':[], 'Th':[], 'Fr':[]}
     for time in flat_list:
@@ -124,6 +132,7 @@ def parse_string(classes, semester, school):
     return_list = []
     for l in valid_list:
         try:
+            # FIX THIS TO WORK WITH CLASS NUMBERS
             return_list.append({'classes':l, 'stats':analyze_timetable(l)})
         except:
             pass
