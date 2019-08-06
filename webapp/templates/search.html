@@ -4,15 +4,6 @@
   <!-- Search by Google -->
   <meta name="google-site-verification" content="2idKE5RPm7i1P9Kap980iC3yIGez3Pr9NdZOws-W9l4" />
 
-  <!-- Ads by Google -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "ca-pub-8764967985989599",
-            enable_page_level_ads: true
-       });
-  </script>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -62,12 +53,81 @@
               {% endif %}
             </div>
           </div>
+          <div class="text-center mb-3">
+            <a data-toggle="collapse" href="#advanced_options"> Toggle Advanced Options </a>
+          </div>
+          <div id="advanced_options" class="collapse">
+            <div class="form-group">
+              <div class="col text-center">
+              {{ form.lunch.label(class="form-control-label")}}
+              </div>
+              {% if form.lunch.errors %}
+              {{ form.lunch(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.semester.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="row">
+              <p class="col-auto"> Not Important </p>
+              {{ form.lunch(class="form-control-range col", min=0, max=100) }}
+              <p class="col-auto"> Very Important </p>
+              </div>
+              {% endif %}
+            </div>
+            <div class="form-group">
+              <div class="col text-center">
+              {{ form.dinner.label(class="form-control-label")}}
+              </div>
+              {% if form.dinner.errors %}
+              {{ form.dinner(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.semester.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="row">
+              <p class="col-auto"> Not Important </p>
+              {{ form.dinner(class="form-control-range col", min=0, max=100) }}
+              <p class="col-auto"> Very Important </p>
+              </div>
+              {% endif %}
+            </div>
+            <div class="form-group">
+              <div class="col text-center">
+                {{ form.offtime.label(class="form-control-label")}}
+              </div>
+              {% if form.offtime.errors %}
+              {{ form.offtime(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.semester.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %}
+              <div class="row">
+              <p class="col-auto"> Not Important </p>
+              {{ form.offtime(class="form-control-range col", min=0, max=100) }}
+              <p class="col-auto"> Very Important </p>
+              </div>
+              {% endif %}
+            </div>
+          </div>
         </fieldset>
-        {{ form.submit(class="btn btn-dark col") }}
+        {{ form.submit(class="btn btn-dark col mb-3") }}
       </form>
       <small> <b> New:</b> You can now specify classes! For example, if you want to take MATH121 with the LDI 3937 and TUT 3592 you can enter MATH121(LDI:3937-TUT:3592), ...
       </br>
       <b> New:</b> Class numbers will now show up when you hover over the <i>ledger</i>; the part reads MATH121:LEC etc.
+      </br>
+      <b> New:</b> Custom ranking parameters, listed under advanced options! </b>
+      </br>
+      </br>
+      <b> Upcoming:</b> Calendar-style class times!
+      </br>
+      <b> Upcoming:</b> Custom lunch and dinner times!
       </small>
     </div>
 
@@ -84,7 +144,7 @@
             <a data-toggle="collapse" href="#section{{loop.index}}" style="text-decoration: none">
               <div class="row" style="margin: auto">
                 <div class='col-auto text-center' style="background:#343A40;color:#ffffff">
-                  <h2 class='m-2'> {{round((50 - class['stats']['score']) * 2, 2)}}% </h2>
+                  <h2 class='m-2'> {{round((50 - class['stats']['score']) * 2, 1)}}% </h2>
                 </div>
                 <div class='col text-center {{class['stats']['day_type']}}' style="color:#000000">
                   {%if class['stats']['day_type'] == 'm'%}

@@ -205,7 +205,6 @@ def parse_request(request_string, semester, school):
             class_string = class_string[:class_string.index('(')]
         except:
             pass
-        print(class_params)
         results = searchClass(class_string, semester, school)
         for result in results:
             result = narrow_result(result, class_params)

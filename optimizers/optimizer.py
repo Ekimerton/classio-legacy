@@ -77,7 +77,7 @@ def flatten_table(timetable):
     return flat_list
 
 # Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
-def analyze_timetable(timetable):
+def analyze_timetable(timetable, params):
     #First flatten
     #flat_list = [[item for sublist in timetable for item in sublist]]
     flat_list = flatten_table(timetable)
@@ -120,10 +120,10 @@ def analyze_timetable(timetable):
             lunch_free+=1
             dinner_free+=1
     day_type = max(set(day_types), key=day_types.count)
-    score = time_in_between + 3*(5 - lunch_free) + 3*(5 - dinner_free)
+    score = params['offtime']*2*time_in_between + params['lunch']*5*(5 - lunch_free) + params['dinner']*5*(5 - dinner_free)
     return {'score':score, 'day_type':day_type, 'lunch':lunch_free, 'dinner':dinner_free, 'time_off':round(time_in_between, 2)}
 
-def parse_string(classes, semester, school):
+def parse_string(classes, semester, school, score_params):
     ledger, permutations = get_permutations(classes, semester, school)
     valid_list = []
     for i in permutations:
@@ -132,8 +132,7 @@ def parse_string(classes, semester, school):
     return_list = []
     for l in valid_list:
         try:
-            # FIX THIS TO WORK WITH CLASS NUMBERS
-            return_list.append({'classes':l, 'stats':analyze_timetable(l)})
+            return_list.append({'classes':l, 'stats':analyze_timetable(l, score_params)})
         except:
             pass
     # Sort by score
