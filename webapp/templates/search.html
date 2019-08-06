@@ -115,6 +115,35 @@
               </div>
               {% endif %}
             </div>
+            <div class="row">
+              <div class="form-group col">
+                {{ form.lunch_time.label(class="form-control-label")}}
+                {% if form.lunch_time.errors %}
+                {{ form.lunch_time(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.lunch_time.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+                {% else %}
+                {{ form.lunch_time(class="form-control form-control-lg") }}
+                {% endif %}
+              </div>
+              <div class="form-group col">
+                {{ form.dinner_time.label(class="form-control-label")}}
+                {% if form.dinner_time.errors %}
+                {{ form.dinner_time(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.dinner_time.errors %}
+                  <span>{{ error }}</span>
+                  {% endfor %}
+                </div>
+                {% else %}
+                {{ form.dinner_time(class="form-control form-control-lg") }}
+                {% endif %}
+              </div>
+            </div>
+            <p> <small> The custom times don't work yet! (W.I.P) </small> </p>
           </div>
         </fieldset>
         {{ form.submit(class="btn btn-dark col mb-3") }}

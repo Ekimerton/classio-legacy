@@ -29,6 +29,8 @@ def search(university):
     offtime = request.args.get('o', type=int)
     if university in ['queens', 'waterloo']:
         form = ClassForm()
+        form.lunch_time.data = "11:30-13:30"
+        form.dinner_time.data = "18:30-20:30"
         if form.validate_on_submit():
             classes=form.classes.data
             if classes:

@@ -76,6 +76,9 @@ def flatten_table(timetable):
             flat_list.append(sublist[item])
     return flat_list
 
+def check_timeframe(timetable):
+    pass
+
 # Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
 def analyze_timetable(timetable, params):
     #First flatten

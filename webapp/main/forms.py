@@ -17,7 +17,7 @@ class ClassForm(FlaskForm):
     lunch = IntegerRangeField('How important is not missing lunch for you?', default=60)
     dinner = IntegerRangeField('How important is not missing dinner for you?', default=60)
     offtime = IntegerRangeField('How important is minimizing time between classes for you?', default=40)
-    lunch_time = StringField("Enter your desired lunch time range")
-    dinner_time = StringField("Enter your desired dinner time range")
+    lunch_time = StringField("Enter your desired lunch time range:")
+    dinner_time = StringField("Enter your desired dinner time range:")
 
     submit = SubmitField('Optimize')
