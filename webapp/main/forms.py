@@ -3,6 +3,23 @@ from wtforms import SubmitField, SelectField, StringField
 from wtforms.fields.html5 import IntegerRangeField
 from wtforms.validators import DataRequired, InputRequired, Optional, ValidationError
 
+# Custom validator for lunch_time and dinner_time
+def check_time(form, field):
+    try:
+        first_time, second_time = field.data.replace(":", "").split("-")
+        int(first_time)
+        int(second_time)
+        if len(first_time) != 4 or len(second_time) != 4:
+            raise ValidationError('Please enter a valid times.')
+        if int(first_time[:2]) > 24 or int(first_time[2:]) > 60 or int(second_time[:2]) > 24 or int(second_time[:2]) > 60:
+            raise ValidationError('Please enter valid times.')
+        if first_time > second_time:
+            raise ValidationError("The first time can't be after the second time.")
+    except Exception as e:
+        print(e)
+        raise ValidationError('Please enter a valid time format.')
+
+
 class SchoolForm(FlaskForm):
     schools = [('queens', "Queen's University"), ('waterloo', 'University of Waterloo')]
     name = SelectField('Select your school', validators=[DataRequired()], choices=schools)
@@ -17,7 +34,7 @@ class ClassForm(FlaskForm):
     lunch = IntegerRangeField('How important is not missing lunch for you?', default=60)
     dinner = IntegerRangeField('How important is not missing dinner for you?', default=60)
     offtime = IntegerRangeField('How important is minimizing time between classes for you?', default=40)
-    lunch_time = StringField("Enter your desired lunch time range:")
-    dinner_time = StringField("Enter your desired dinner time range:")
+    lunch_time = StringField("Enter your desired lunch time range:", validators=[DataRequired(), check_time])
+    dinner_time = StringField("Enter your desired dinner time range:", validators=[DataRequired(), check_time])
 
     submit = SubmitField('Optimize')
