@@ -69,6 +69,12 @@ semester = input("Fall or Winter? (2019/2020): ")
 if not semester in ['Fall', 'Winter']:
     print("Please enter 'Fall' or 'Winter'")
     exit()
+else:
+    if semester == 'Fall':
+        year = '2019 '
+    elif semester == 'Winter':
+        year = '2020 '
+
 
     # Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
 firefoxProfile = FirefoxProfile()
@@ -92,17 +98,17 @@ element.click()
     # Goes to course search
 flip_flop = True
 i = start
-while i < 143: #Replace this 136 with a dynamic range (142 for fall, 143 for winter)
+while i < 144: #Replace this 136 with a dynamic range (144 for fall, 143 for winter)
 
     browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
     wait = WebDriverWait(browser, 30)
 
-    # semester Selection
+    # Semester Selection
     element = wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_STRM$35$')))
     option = element.find_elements_by_tag_name('option')
-    if option != '2019 ' + semester:
+    if option != year + semester:
         for option in element.find_elements_by_tag_name('option'):
-            if option.text == '2019 ' + semester:
+            if option.text == year + semester:
                 option.click()
                 break
 
@@ -163,7 +169,6 @@ while i < 143: #Replace this 136 with a dynamic range (142 for fall, 143 for win
             continue
         else:
             print("    Unknown error, query returned neither a proper page nor a 'not found'")
-            print(i)
             exit()
 
     for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
@@ -232,7 +237,7 @@ while i < 143: #Replace this 136 with a dynamic range (142 for fall, 143 for win
                     session.close()
         except Exception as e:
             print("        failed reading section: ", title)
-            print(e)
+            print("            ", e)
     continue
 
 session.close()
