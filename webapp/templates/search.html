@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <link rel="icon" type="image/png" href="{{url_for('static', filename='favicon.png')}}" />
   <!-- Search by Google -->
@@ -9,223 +10,265 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>classio</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}" />
 
   <!-- Bootstrap & Dependancies -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
 </head>
-  <body>
-    <div class="jumbotron container mt-4" style="background:#ffffff">
-      <div class="text-center mb-3" id="intro">
-        <h1 class='text-center'> <a href="{{url_for('main.home')}}"> classio</a> • {{university}} </h1>
-        <h3 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a> (W.I.P!)</h3>
-        <small> Found a bug? Have an idea for a new feature? <a href="https://docs.google.com/forms/d/1FNYSnC7lkeZQt-3fw_PotWnGe5q40A5vKZaJDMRs5b4/edit"> Let me know! </a> </small>
-      </div>
-      <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <fieldset class="form-group">
-          <div class="row">
-            <div class="form-group col">
-              {{ form.classes.label(class="form-control-label")}}
-              {% if form.classes.errors %}
-              {{ form.classes(class="form-control form-control-lg is-invalid") }}
-              <div class="invalid-feedback">
-                {% for error in form.classes.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-              {% else %}
-              {{ form.classes(class="form-control form-control-lg") }}
-              {% endif %}
-              <small> Enter your classes as: CLAS101,CLAS102,CLAS103... </small>
+
+<body>
+  <div class="jumbotron container mt-4" style="background:#ffffff">
+    <div class="text-center mb-3" id="intro">
+      <h1 class='text-center'> <a href="{{url_for('main.home')}}"> classio</a> • {{university}} </h1>
+      <h3 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a>
+        with ❤️</h3>
+      <small> Found a bug? Have an idea for a new feature? <a
+          href="https://docs.google.com/forms/d/1FNYSnC7lkeZQt-3fw_PotWnGe5q40A5vKZaJDMRs5b4/edit"> Let me know! </a>
+      </small>
+    </div>
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+      <fieldset class="form-group">
+        <div class="row">
+          <div class="form-group col">
+            {{ form.classes.label(class="form-control-label")}}
+            {% if form.classes.errors %}
+            {{ form.classes(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.classes.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
             </div>
-            <div class="form-group col-auto">
-              {{ form.semester.label(class="form-control-label")}}
-              {% if form.semester.errors %}
-              {{ form.semester(class="form-control form-control-lg is-invalid") }}
-              <div class="invalid-feedback">
-                {% for error in form.semester.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-              {% else %}
-              {{ form.semester(class="form-control form-control-lg") }}
-              {% endif %}
+            {% else %}
+            {{ form.classes(class="form-control form-control-lg") }}
+            {% endif %}
+            <small> Enter your classes as: CLAS101,CLAS102,CLAS103... </small>
+          </div>
+          <div class="form-group col-auto">
+            {{ form.semester.label(class="form-control-label")}}
+            {% if form.semester.errors %}
+            {{ form.semester(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.semester.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
             </div>
+            {% else %}
+            {{ form.semester(class="form-control form-control-lg") }}
+            {% endif %}
           </div>
-          <div class="text-center mb-3">
-            <a data-toggle="collapse" href="#advanced_options"> Toggle Advanced Options </a>
-          </div>
-          <div id="advanced_options" class="collapse">
-            <div class="form-group">
-              <div class="col text-center">
-              {{ form.lunch.label(class="form-control-label")}}
-              </div>
-              {% if form.lunch.errors %}
-              {{ form.lunch(class="form-control form-control-lg is-invalid") }}
-              <div class="invalid-feedback">
-                {% for error in form.semester.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-              {% else %}
-              <div class="row">
+        </div>
+        <div class="text-center mb-3">
+          <a data-toggle="collapse" href="#advanced_options"> Toggle Advanced Options </a>
+        </div>
+        <div id="advanced_options" class="collapse">
+          <div class="form-group">
+            <div class="col text-center">
+              {{ form.lunch.label(class="form-control-label col")}}
+            </div>
+            {% if form.lunch.errors %}
+            {{ form.lunch(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.semester.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="row">
               <p class="col-auto"> Not Important </p>
               {{ form.lunch(class="form-control-range col", min=0, max=100) }}
               <p class="col-auto"> Very Important </p>
-              </div>
-              {% endif %}
             </div>
-            <div class="form-group">
-              <div class="col text-center">
-              {{ form.dinner.label(class="form-control-label")}}
-              </div>
-              {% if form.dinner.errors %}
-              {{ form.dinner(class="form-control form-control-lg is-invalid") }}
-              <div class="invalid-feedback">
-                {% for error in form.semester.errors %}
-                <span>{{ error }}</span>
-                {% endfor %}
-              </div>
-              {% else %}
-              <div class="row">
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <div class="col text-center">
+              {{ form.dinner.label(class="form-control-label col")}}
+            </div>
+            {% if form.dinner.errors %}
+            {{ form.dinner(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.semester.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="row">
               <p class="col-auto"> Not Important </p>
               {{ form.dinner(class="form-control-range col", min=0, max=100) }}
               <p class="col-auto"> Very Important </p>
-              </div>
-              {% endif %}
             </div>
-            <div class="form-group">
-              <div class="col text-center">
-                {{ form.offtime.label(class="form-control-label")}}
-              </div>
-              {% if form.offtime.errors %}
-              {{ form.offtime(class="form-control form-control-lg is-invalid") }}
+            {% endif %}
+          </div>
+          <div class="form-group">
+            <div class="col text-center">
+              {{ form.offtime.label(class="form-control-label")}}
+            </div>
+            {% if form.offtime.errors %}
+            {{ form.offtime(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.semester.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="row">
+              <p class="col-auto"> Not Important </p>
+              {{ form.offtime(class="form-control-range col", min=0, max=100) }}
+              <p class="col-auto"> Very Important </p>
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="form-group col">
+            {{ form.lunch_start.label(class="form-control-label text-center col-12 mb-3")}}
+            <div class="row">
+              {% if form.lunch_start.errors %}
+              {{ form.lunch_start(class="form-control form-control-lg is-invalid") }}
               <div class="invalid-feedback">
-                {% for error in form.semester.errors %}
+                {% for error in form.lunch_start.errors %}
                 <span>{{ error }}</span>
                 {% endfor %}
               </div>
               {% else %}
-              <div class="row">
-              <p class="col-auto"> Not Important </p>
-              {{ form.offtime(class="form-control-range col", min=0, max=100) }}
-              <p class="col-auto"> Very Important </p>
+              {{ form.lunch_start(class="form-control form-control-lg col") }}
+              {% endif %}
+              <div class="col-auto">
+                <h2> - </h2>
               </div>
+              {% if form.lunch_end.errors %}
+              {{ form.lunch_end(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.lunch_end.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %}
+              {{ form.lunch_end(class="form-control form-control-lg col") }}
               {% endif %}
             </div>
+          </div>
+
+          <div class="form-group col">
+            {{ form.dinner_start.label(class="form-control-label text-center col-12 mb-3")}}
             <div class="row">
-              <div class="form-group col">
-                {{ form.lunch_time.label(class="form-control-label")}}
-                {% if form.lunch_time.errors %}
-                {{ form.lunch_time(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                  {% for error in form.lunch_time.errors %}
-                  <span>{{ error }}</span>
-                  {% endfor %}
-                </div>
-                {% else %}
-                {{ form.lunch_time(class="form-control form-control-lg") }}
-                {% endif %}
+              {% if form.dinner_start.errors %}
+              {{ form.dinner_start(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.dinner_start.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
               </div>
-              <div class="form-group col">
-                {{ form.dinner_time.label(class="form-control-label")}}
-                {% if form.dinner_time.errors %}
-                {{ form.dinner_time(class="form-control form-control-lg is-invalid") }}
-                <div class="invalid-feedback">
-                  {% for error in form.dinner_time.errors %}
-                  <span>{{ error }}</span>
-                  {% endfor %}
-                </div>
-                {% else %}
-                {{ form.dinner_time(class="form-control form-control-lg") }}
-                {% endif %}
+              {% else %}
+              {{ form.dinner_start(class="form-control form-control-lg col") }}
+              {% endif %}
+              <div class="col-auto">
+                <h2> - </h2>
+              </div>
+              {% if form.dinner_end.errors %}
+              {{ form.dinner_end(class="form-control form-control-lg is-invalid") }}
+              <div class="invalid-feedback">
+                {% for error in form.dinner_end.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+              </div>
+              {% else %}
+              {{ form.dinner_end(class="form-control form-control-lg col") }}
+              {% endif %}
+              <div>
               </div>
             </div>
-            <p> <small> The custom times don't work yet! (W.I.P) </small> </p>
-          </div>
-        </fieldset>
-        {{ form.submit(class="btn btn-dark col mb-3") }}
-      </form>
-      <small> <b> New:</b> You can now specify classes! For example, if you want to take MATH121 with the LDI 3937 and TUT 3592 you can enter MATH121(LDI:3937-TUT:3592), ...
+      </fieldset>
+      {{ form.submit(class="btn btn-dark col mb-3") }}
+    </form>
+    <small> <b> New:</b> You can now specify classes! For example, if you want to take MATH121 with the LDI 3937 and TUT
+      3592 you can enter MATH121(LDI:3937-TUT:3592), ...
       </br>
       <b> New:</b> Class numbers will now show up when you hover over the <i>ledger</i>; the part reads MATH121:LEC etc.
       </br>
       </br>
       <b> Upcoming:</b> Calendar-style class times!
       </br>
-      <b> Upcoming:</b> Custom lunch and dinner times!
-      </br>
       </br>
       <b> Fixed:</b> Old version showed Winter 2019 classes under 'Winter', now it shows Winter 2020.
-      </small>
-    </div>
+    </small>
+  </div>
 
-    {% if class_list is defined and ledger is defined %}
-    <div class="container jumbotron p-3" style="background:#ffffff">
-      <h2 class='text-center'> Number of options: {{len}} </h2>
-      {% if len > 100 %}
-        <p class='text-center'> Displaying the best 100 results. </p>
-      {% endif %}
-      {% for class in class_list %}
-        <article class="timetable">
-          <div class="m-3 timetable-section" style="border-width: 5px;border-bottom-style: solid">
-            <!-- Clickable collapse toggle -->
-            <a data-toggle="collapse" href="#section{{loop.index}}" style="text-decoration: none">
-              <div class="row" style="margin: auto">
-                <div class='col-auto text-center' style="background:#343A40;color:#ffffff">
-                  <h2 class='m-2'> {{round((50 - class['stats']['score']) * 2, 1)}}% </h2>
-                </div>
-                <div class='col text-center {{class['stats']['day_type']}}' style="color:#000000">
-                  {%if class['stats']['day_type'] == 'm'%}
-                    <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Early</h2>
-                  {%elif class['stats']['day_type'] == 'a'%}
-                    <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Midday</h2>
-                  {%elif class['stats']['day_type'] == 'e'%}
-                    <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Late</h2>
-                  {%elif class['stats']['day_type'] == 'x'%}
-                    <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Mixed</h2>
-                  {%endif%}
-                </div>
-                <div class="row col-12 timetable-section-stats" style="margin: auto">
-                  <div class="col text-center" style="margin: auto">
-                    <p class="mb-1 mt-1"> lunches free: {{class['stats']['lunch']}} </p>
-                  </div>
-                  <div class="col text-center" style="margin: auto">
-                    <p class="mb-1 mt-1"> dinners free: {{class['stats']['dinner']}} </p>
-                  </div>
-                  <div class="col text-center" style="margin: auto">
-                    <p class="mb-1 mt-1"> time between classes: {{class['stats']['time_off']}} </p>
-                  </div>
-                </div>
+  {% if class_list is defined and ledger is defined %}
+  <div class="container jumbotron p-3" style="background:#ffffff">
+    <h2 class='text-center'> Number of options: {{len}} </h2>
+    {% if len > 100 %}
+    <p class='text-center'> Displaying the best 100 results. </p>
+    {% endif %}
+    {% for class in class_list %}
+    <article class="timetable">
+      <div class="m-3 timetable-section" style="border-width: 5px;border-bottom-style: solid">
+        <!-- Clickable collapse toggle -->
+        <a data-toggle="collapse" href="#section{{loop.index}}" style="text-decoration: none">
+          <div class="row" style="margin: auto">
+            <div class='col-auto text-center' style="background:#343A40;color:#ffffff">
+              <h2 class='m-2'> {{round((50 - class['stats']['score']) * 2, 1)}}% </h2>
+            </div>
+            <div class='col text-center {{class['stats']['day_type']}}' style="color:#000000">
+              {%if class['stats']['day_type'] == 'm'%}
+              <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Early</h2>
+              {%elif class['stats']['day_type'] == 'a'%}
+              <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Midday</h2>
+              {%elif class['stats']['day_type'] == 'e'%}
+              <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Late</h2>
+              {%elif class['stats']['day_type'] == 'x'%}
+              <h2 class="mb-1 mt-1 p-1 pl-3 pr-3">Mixed</h2>
+              {%endif%}
+            </div>
+            <div class="row col-12 timetable-section-stats" style="margin: auto">
+              <div class="col text-center" style="margin: auto">
+                <p class="mb-1 mt-1"> lunches free: {{class['stats']['lunch']}} </p>
               </div>
-            </a>
-
-            <div id="section{{loop.index}}" class="collapse container-fluid">
-              <div class="row timetable-section-times">
-                {% for section in class['classes']%}
-                <div class='text-center col' style="padding-left: 0; padding-right: 0">
-                  <a data-toggle="tooltip" title="{{section[0]}}"><p class='p-2' style="color:#ffffff; background:#343A40"> {{ledger[loop.index - 1]}} </p></a>
-                  {% for time in section[1:] %}
-                    <p class="p-1 m-3"> {{pretty_time(time)}} <p>
-                  {% endfor %}
-                </div>
-                {% endfor %}
+              <div class="col text-center" style="margin: auto">
+                <p class="mb-1 mt-1"> dinners free: {{class['stats']['dinner']}} </p>
+              </div>
+              <div class="col text-center" style="margin: auto">
+                <p class="mb-1 mt-1"> time between classes: {{class['stats']['time_off']}}h </p>
               </div>
             </div>
-
           </div>
-      </article>
-      {% endfor %}
-    </div>
-    {% endif %}
-    <script>
-      $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-      });
-    </script>
-  </body>
+        </a>
+
+        <div id="section{{loop.index}}" class="collapse container-fluid">
+          <div class="row timetable-section-times">
+            {% for section in class['classes']%}
+            <div class='text-center col' style="padding-left: 0; padding-right: 0">
+              <a data-toggle="tooltip" title="{{section[0]}}">
+                <p class='p-2' style="color:#ffffff; background:#343A40"> {{ledger[loop.index - 1]}} </p>
+              </a>
+              {% for time in section[1:] %}
+              <p class="p-1 m-3"> {{pretty_time(time)}} <p>
+                  {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <script>
+    $(document).ready(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+  </script>
+</body>
+
 </html>

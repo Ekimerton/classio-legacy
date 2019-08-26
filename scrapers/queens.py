@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 # TODO: Change scraper to scrape all classes, open or closed!
 #Setup
 
-    # Helper Methods
+# Helper Methods
 def hour12to24(timestamp):
     ep_index = timestamp.index(":")
     hour = int(timestamp[:ep_index])

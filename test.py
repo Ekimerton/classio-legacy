@@ -1,12 +1,3 @@
-Base = declarative_base()
-class Course(Base):
-    __tablename__ = "course"
-    id = Column('id', Integer, primary_key=True)
-    name = Column('name', String)
-    semester = Column('semester', String)
-    constant_times = Column('constant_times', Text, unique=False)
-    variable_times = Column('variable_times', Text, unique=False)
-
 def hour12to24(timestamp):
     ep_index = timestamp.index(":")
     hour = int(timestamp[:ep_index])
@@ -124,3 +115,22 @@ def pretty_time(timestamp):
 
 print(pretty_time('Mo12301330'))
 '''
+
+def addMinutes(time, minutes):
+    time = str(time)
+    hour = int(time[:2])
+    minute = int(time[2:])
+    minute += minutes
+    while minute >= 60:
+        minute -= 60
+        hour += 1
+    hour = hour % 24
+    hour = str(hour)
+    minute = str(minute)
+    if len(hour) < 2:
+        hour = '0' + hour
+    if len(minute) < 2:
+        minute = '0' + minute
+    return int(hour + minute)
+
+print(addMinutes(1230, 42))

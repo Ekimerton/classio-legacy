@@ -13,9 +13,9 @@ def is_conflicted(list1, list2):
     return False
 
 # Checks to see if a list of times is free during a time, eg between 11301230 for lunch.
-def is_free(day_list, timeset):
+def is_free(day_list, start_time, end_time):
     for timeframe in day_list:
-        if timeframe[4:] > timeset[:4] and timeset[4:] > timeframe[:4]:
+        if timeframe[4:] > end_time and start_time > timeframe[:4]:
             return False
     return True
 
@@ -76,13 +76,41 @@ def flatten_table(timetable):
             flat_list.append(sublist[item])
     return flat_list
 
-def check_timeframe(timetable):
-    pass
+def addMinutes(time, minutes):
+    hour = int(time[:2])
+    minute = int(time[2:])
+    minute += minutes
+    while minute >= 60:
+        minute -= 60
+        hour += 1
+    hour = hour % 24
+    hour = str(hour)
+    minute = str(minute)
+    if len(hour) < 2:
+        hour = '0' + hour
+    if len(minute) < 2:
+        minute = '0' + minute
+    return hour + minute
+
+def check_timeframe(timetable, timeframe):
+    start_time = timeframe[:4]
+    end_time = timeframe[4:]
+    free_count = 0
+    while addMinutes(start_time, 10) < end_time:
+        if is_free(timetable, start_time, addMinutes(start_time, 10)):
+            free_count += 1
+        else:
+            free_count = 0
+
+        if free_count >= 3:
+            return True
+        start_time = addMinutes(start_time, 10)
+
+    return False
 
 # Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
 def analyze_timetable(timetable, params):
     #First flatten
-    #flat_list = [[item for sublist in timetable for item in sublist]]
     flat_list = flatten_table(timetable)
     #Sort into lists for Mo, Tu, We, Th, Fr
     day_dict = {'Mo':[], 'Tu':[], 'We':[], 'Th':[], 'Fr':[]}
@@ -112,10 +140,10 @@ def analyze_timetable(timetable, params):
                 if start >= 1630:
                     day_types.append('e')
             # Checks if lunch is free
-            if is_free(day_dict[day], '11301230') or is_free(day_dict[day], '12301330'):
+            if check_timeframe(day_dict[day], params['lunch_time']):
                 lunch_free+=1
             # Checks if dinner is free
-            if is_free(day_dict[day], '18301930') or is_free(day_dict[day], '19302030'):
+            if check_timeframe(day_dict[day], params['dinner_time']):
                 dinner_free+=1
             # Adds total time between classes
             time_in_between += calculate_offtime(day_dict[day])
@@ -136,8 +164,8 @@ def parse_string(classes, semester, school, score_params):
     for l in valid_list:
         try:
             return_list.append({'classes':l, 'stats':analyze_timetable(l, score_params)})
-        except:
-            pass
+        except Exception as e:
+            print(e)
     # Sort by score
     return_list = sorted(return_list, key = lambda i: i['stats']['score'])
     return ledger, return_list

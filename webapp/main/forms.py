@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, SelectField, StringField
+from wtforms_components import TimeField
 from wtforms.fields.html5 import IntegerRangeField
 from wtforms.validators import DataRequired, InputRequired, Optional, ValidationError
 
@@ -34,7 +35,9 @@ class ClassForm(FlaskForm):
     lunch = IntegerRangeField('How important is not missing lunch for you?', default=60)
     dinner = IntegerRangeField('How important is not missing dinner for you?', default=60)
     offtime = IntegerRangeField('How important is minimizing time between classes for you?', default=40)
-    lunch_time = StringField("Enter your desired lunch time range:", validators=[DataRequired(), check_time])
-    dinner_time = StringField("Enter your desired dinner time range:", validators=[DataRequired(), check_time])
+    lunch_start = TimeField("At what time would you like to eat lunch?", validators=[DataRequired()])
+    lunch_end = TimeField("At what time would you like to eat lunch?", validators=[DataRequired()])
+    dinner_start = TimeField("At what time would you like to eat dinner?", validators=[DataRequired()])
+    dinner_end = TimeField("At what time would you like to eat dinner?", validators=[DataRequired()])
 
     submit = SubmitField('Optimize')
