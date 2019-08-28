@@ -204,6 +204,9 @@
   {% if class_list is defined and ledger is defined %}
   <div class="container jumbotron p-3" style="background:#ffffff">
     <h2 class='text-center'> Number of options: {{len}} </h2>
+    <a class='text-center' data-toggle="modal" href="#tips">
+      <p> What do these results mean? </p>
+    </a>
     {% if len > 100 %}
     <p class='text-center'> Displaying the best 100 results. </p>
     {% endif %}
@@ -255,10 +258,45 @@
             {% endfor %}
           </div>
         </div>
-
       </div>
     </article>
     {% endfor %}
+  </div>
+
+  <div id="tips" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">How the results work</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Classio finds every working combination of times within your classes, and scores it based on three
+            categories: </p>
+          <ul>
+            <li>Lunches missed </li>
+            <li>Dinners missed </li>
+            <li>Time wasted between classes </li>
+          </ul>
+          <h4>The main bar</h4>
+          <p> The main bar on any timetable selection has two components: the <b> score </b> and the <b> day-time
+              indicator</b>.</p>
+          <p> The <b> score </b> is the percentage point in the top left corner of a timetable. A higher score means
+            less meals missed/less time between classes. The score is calculated using the factors mentioned above. The
+            weighting for each factor changes if you tweak your priorities within <i> Advanced Options </i>.
+          </p>
+          <p> The <b> day-time indicator </b> gives you a general idea as to when most of your classes will take place.
+            Morning classes start before 11:30AM, afternoons start between 11:30AM - 4:30PM, evenings start after
+            4:30PM. A mixed rating means the day has too wide of a range to classify (a day might start at 8:30AM and
+            end at 5:30PM).
+          </p>
+          <h4>The dropdown content</h4>
+          <p> Once clicked on, a timetable will drop down a table which shows when each class was picked to be in.
+            Additionally, <b> hovering over the class name </b> (eg: MATH101:LEC) will reveal the section number used in
+            the timetable.</p>
+        </div>
+      </div>
+    </div>
   </div>
   {% endif %}
   <script>
