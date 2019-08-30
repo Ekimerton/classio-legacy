@@ -3,14 +3,17 @@ import os
 from bs4 import BeautifulSoup
 import lxml
 
+
 class Course():
     def __init__(self, nme, sem, constant_t, variable_t):
         self.name = nme
         self.semester = sem
         self.constant_times = constant_t
         self.variable_times = variable_t
+
     def __str__(self):
         return self.name + " " + self.semester + "\n" + str(self.constant_times) + "\n" + str(self.variable_times)
+
 
 def mergeCopies(times_list):
     new_list = []
@@ -27,6 +30,7 @@ def mergeCopies(times_list):
                 times_list[i].insert(0, name)
                 del times_list[j]
 
+
 def format_hour(hour_string):
     hour = int(hour_string[:2])
     if hour < 7:
@@ -34,11 +38,12 @@ def format_hour(hour_string):
     else:
         return hour_string
 
+
 def format_time(time_string):
     times = []
     hour = time_string[:11]
     day = ""
-    #print(time_string[11:])
+    # print(time_string[11:])
     for c in time_string[11:]:
         if c.isalpha:
             day += c
@@ -65,7 +70,7 @@ def format_time(time_string):
 
 
 def find_class(semester, course):
-    semester_dict = {'S':'1195', 'F':'1199', 'W':'1201'}
+    semester_dict = {'S': '1195', 'F': '1199', 'W': '1201'}
     with requests.Session() as c:
         for idx, char in enumerate(course):
             if char.isdigit():
@@ -74,14 +79,15 @@ def find_class(semester, course):
         cournum = (course[idx:])
         query_url = "http://www.adm.uwaterloo.ca/cgi-bin/cgiwrap/infocour/salook.pl"
         sess = semester_dict[semester]
-        query_data = dict(level="under", sess=sess, subject=subject, cournum=cournum)
+        query_data = dict(level="under", sess=sess,
+                          subject=subject, cournum=cournum)
 
         post = c.post(query_url, data=query_data)
         soup = BeautifulSoup(post.content, 'lxml')
-        #print(returned_html)
+        # print(returned_html)
 
-        #print(soup.prettify())
-        #print("---------")
+        # print(soup.prettify())
+        # print("---------")
 
         find_error = str(soup.find('b'))
         if find_error == '<b>Sorry, but your query had no matches.</b>':
@@ -89,7 +95,7 @@ def find_class(semester, course):
 
         tables = soup.find_all('table')
         table = tables[1]
-        #print(table.prettify())
+        # print(table.prettify())
         rows = table.find_all('tr')
         times = []
         for row in rows:
@@ -123,3 +129,6 @@ def find_class(semester, course):
             else:
                 variable_times.append(time_section)
         return Course(course, semester, constant_times, variable_times)
+
+
+find_class('F', "CS245")

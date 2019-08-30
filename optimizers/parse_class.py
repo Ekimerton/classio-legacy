@@ -1,9 +1,12 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.orm import sessionmaker
-import scrapers.waterloo  as waterloo
+import scrapers.waterloo as waterloo
+import scrapers.ubc as ubc
 
 Base = declarative_base()
+
+
 class CourseDB(Base):
     __tablename__ = "course"
     id = Column('id', Integer, primary_key=True)
@@ -11,6 +14,7 @@ class CourseDB(Base):
     semester = Column('semester', String)
     constant_times = Column('constant_times', Text, unique=False)
     variable_times = Column('variable_times', Text, unique=False)
+
 
 class Course():
     def __init__(self, nme, sem, constant_t, variable_t):
@@ -23,6 +27,8 @@ class Course():
         return self.name + " " + self.semester + "\n" + str(self.constant_times) + "\n" + str(self.variable_times)
 
 # Merges two same-id sections, two TUTs for example
+
+
 def mergeCopies(times_list):
     for i in range(0, len(times_list)):
         for j in range(i, len(times_list)):
@@ -38,6 +44,8 @@ def mergeCopies(times_list):
                 del times_list[j]
 
 # Change this to work with class number!
+
+
 def parseClass(course):
     constant_t = []
     variable_t = []
@@ -81,6 +89,7 @@ def parseClass(course):
     mergeCopies(variable_t)
     return Course(course.name, course.semester, constant_t, variable_t)
 
+
 def searchClass(name, semester, school):
     if school in ['queens']:
         engine = create_engine('sqlite:///scrapers/{}.db'.format(school))
@@ -89,17 +98,20 @@ def searchClass(name, semester, school):
         session = Session()
         class_list = []
         try:
-            courses = session.query(CourseDB).filter_by(name=name, semester=semester).first()
+            courses = session.query(CourseDB).filter_by(
+                name=name, semester=semester).first()
             class_list.append(parseClass(courses))
         except:
             pass
         try:
-            courses = session.query(CourseDB).filter_by(name=name+'A', semester=semester).first()
+            courses = session.query(CourseDB).filter_by(
+                name=name+'A', semester=semester).first()
             class_list.append(parseClass(courses))
-        except: #Exception as e:
+        except:  # Exception as e:
             pass
         try:
-            courses = session.query(CourseDB).filter_by(name=name+'B', semester=semester).first()
+            courses = session.query(CourseDB).filter_by(
+                name=name+'B', semester=semester).first()
             class_list.append(parseClass(courses))
         except:
             pass
@@ -118,8 +130,21 @@ def searchClass(name, semester, school):
         for cls in class_list:
             cls.variable_times = mergeClasses(cls.variable_times)
         return class_list
+    elif school == "ubc":
+        class_list = []
+        try:
+            result = ubc.find_class(semester, name)
+            if result:
+                class_list.append(result)
+        except:
+            pass
+        for cls in class_list:
+            cls.variable_times = mergeClasses(cls.variable_times)
+        return class_list
 
 # Function that gets rid of duplicate class times, merges the class numbers
+
+
 def mergeClasses(classes):
     new_list = []
     for section in classes:
@@ -137,6 +162,8 @@ def mergeClasses(classes):
         new_list.append(new_section)
     return new_list
 # This is a patchy get-it-done deal. Not eff at all, will work on it tomorrow.
+
+
 def narrow_result(cls, params):
     if not params:
         return cls
@@ -188,17 +215,20 @@ def narrow_result(cls, params):
     print(narrow_variable_times)
     return Course(cls.name, cls.semester, narrow_constant_times, narrow_variable_times)
 
+
 def parse_request(request_string, semester, school):
     class_list = []
     for class_string in request_string.split(','):
         class_params = []
         try:
-            class_params_str = class_string[class_string.index('(') + 1: class_string.index(')')]
+            class_params_str = class_string[class_string.index(
+                '(') + 1: class_string.index(')')]
             for class_param_str in class_params_str.split("-"):
                 try:
                     section_type = class_param_str[:class_param_str.index(":")]
-                    class_num = class_param_str[class_param_str.index(":") + 1:]
-                    class_param = {'section':section_type, 'class':class_num}
+                    class_num = class_param_str[class_param_str.index(
+                        ":") + 1:]
+                    class_param = {'section': section_type, 'class': class_num}
                     class_params.append(class_param)
                 except:
                     pass

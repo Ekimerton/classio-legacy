@@ -2,6 +2,8 @@ import itertools
 import optimizers.parse_class as parse_class
 
 # Checks if two classes have conflicting ranges, turns out this is a hard problem! (medium more like haha!!!!!! xdddddD)
+
+
 def is_conflicted(list1, list2):
     for time1 in list1:
         for time2 in list2:
@@ -13,6 +15,8 @@ def is_conflicted(list1, list2):
     return False
 
 # Checks to see if a list of times is free during a time, eg between 11301230 for lunch.
+
+
 def is_free(day_list, start_time, end_time):
     for timeframe in day_list:
         if timeframe[4:] > end_time and start_time > timeframe[:4]:
@@ -20,6 +24,8 @@ def is_free(day_list, start_time, end_time):
     return True
 
 # True means no conflicts, false means there is conflicts
+
+
 def check_timetable(timetable):
     for i in range(len(timetable)):
         for j in range(i + 1, len(timetable)):
@@ -28,6 +34,8 @@ def check_timetable(timetable):
     return True
 
 # Calculates the amount of time in between classes for a day
+
+
 def calculate_offtime(day):
     offtime = 0
     endh = day[0][:2]
@@ -41,6 +49,8 @@ def calculate_offtime(day):
     return offtime
 
 # Returns all possible permutations
+
+
 def get_permutations(classes, semester, school):
     resp = parse_class.parse_request(classes, semester, school)
     constant_times = []
@@ -69,12 +79,14 @@ def get_permutations(classes, semester, school):
         permutations.append(schedule)
     return ledger, permutations
 
+
 def flatten_table(timetable):
     flat_list = []
     for sublist in timetable:
         for item in range(1, len(sublist)):
             flat_list.append(sublist[item])
     return flat_list
+
 
 def addMinutes(time, minutes):
     hour = int(time[:2])
@@ -91,6 +103,7 @@ def addMinutes(time, minutes):
     if len(minute) < 2:
         minute = '0' + minute
     return hour + minute
+
 
 def check_timeframe(timetable, timeframe):
     start_time = timeframe[:4]
@@ -109,11 +122,13 @@ def check_timeframe(timetable, timeframe):
     return False
 
 # Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
+
+
 def analyze_timetable(timetable, params):
-    #First flatten
+    # First flatten
     flat_list = flatten_table(timetable)
-    #Sort into lists for Mo, Tu, We, Th, Fr
-    day_dict = {'Mo':[], 'Tu':[], 'We':[], 'Th':[], 'Fr':[]}
+    # Sort into lists for Mo, Tu, We, Th, Fr
+    day_dict = {'Mo': [], 'Tu': [], 'We': [], 'Th': [], 'Fr': []}
     for time in flat_list:
         day_list = time[:2]
         day_dict[day_list].append(time[2:])
@@ -121,7 +136,7 @@ def analyze_timetable(timetable, params):
     time_in_between = 0
     lunch_free = 0
     dinner_free = 0
-    day_types = [] #This list is saturated, then the mode becomes the day type
+    day_types = []  # This list is saturated, then the mode becomes the day type
     for day in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
         # Checks only if there are classes that day
         if day_dict[day]:
@@ -141,19 +156,21 @@ def analyze_timetable(timetable, params):
                     day_types.append('e')
             # Checks if lunch is free
             if check_timeframe(day_dict[day], params['lunch_time']):
-                lunch_free+=1
+                lunch_free += 1
             # Checks if dinner is free
             if check_timeframe(day_dict[day], params['dinner_time']):
-                dinner_free+=1
+                dinner_free += 1
             # Adds total time between classes
             time_in_between += calculate_offtime(day_dict[day])
         else:
-            lunch_free+=1
-            dinner_free+=1
+            lunch_free += 1
+            dinner_free += 1
     day_type = max(set(day_types), key=day_types.count)
-    #Score works fine, but I'd like to improve it.
-    score = params['offtime']*2*time_in_between + params['lunch']*5*(5 - lunch_free) + params['dinner']*5*(5 - dinner_free)
-    return {'score':score, 'day_type':day_type, 'lunch':lunch_free, 'dinner':dinner_free, 'time_off':round(time_in_between, 2)}
+    # Score works fine, but I'd like to improve it.
+    score = params['offtime']*2*time_in_between + params['lunch'] * \
+        5*(5 - lunch_free) + params['dinner']*5*(5 - dinner_free)
+    return {'score': score, 'day_type': day_type, 'lunch': lunch_free, 'dinner': dinner_free, 'time_off': round(time_in_between, 2)}
+
 
 def parse_string(classes, semester, school, score_params):
     ledger, permutations = get_permutations(classes, semester, school)
@@ -164,9 +181,30 @@ def parse_string(classes, semester, school, score_params):
     return_list = []
     for l in valid_list:
         try:
-            return_list.append({'classes':l, 'stats':analyze_timetable(l, score_params)})
+            return_list.append(
+                {'classes': l, 'stats': analyze_timetable(l, score_params)})
         except Exception as e:
             print(e)
     # Sort by score
-    return_list = sorted(return_list, key = lambda i: i['stats']['score'])
+    return_list = sorted(return_list, key=lambda i: i['stats']['score'])
     return ledger, return_list
+
+# Part for creating a calendar view
+
+# Creates a calender for each timetable
+
+
+def parse_timetables(timetable_list):
+    for entry in timetable_list:
+        create_calendar(entry['classes'])
+
+# TODO Creates a calender for one timetable
+
+
+def create_calendar(class_list):
+    flat_list = [item for sublist in class_list for item in sublist]
+    day_list = []
+    day_map = {'Mo': 0, 'Tu': 1, 'We': 2, 'Th': 3, 'Fr': 4}
+    for entry in flat_list:
+        if entry in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
+            pass

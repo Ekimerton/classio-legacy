@@ -204,12 +204,12 @@
   {% if class_list is defined and ledger is defined %}
   <div class="container jumbotron p-3" style="background:#ffffff">
     <h2 class='text-center'> Number of options: {{len}} </h2>
+    {% if len > 99 %}
+    <p class='text-center'> Displaying the best 100 results. </p>
+    {% endif %}
     <a class='text-center' data-toggle="modal" href="#tips">
       <p> What do these results mean? </p>
     </a>
-    {% if len > 100 %}
-    <p class='text-center'> Displaying the best 100 results. </p>
-    {% endif %}
     {% for class in class_list %}
     <article class="timetable">
       <div class="m-3 timetable-section" style="border-width: 5px;border-bottom-style: solid">
@@ -263,6 +263,7 @@
     {% endfor %}
   </div>
 
+  <!-- Tip Modal -->
   <div id="tips" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">

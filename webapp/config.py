@@ -1,8 +1,12 @@
 import os
 
+
 class Config:
     # App
-    SECRET_KEY = os.environ['SECRET_KEY']
+    try:
+        SECRET_KEY = os.environ['SECRET_KEY']
+    except:
+        SECRET_KEY = 'test'
     DEBUG = True
     # Database
     #SQLALCHEMY_DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
