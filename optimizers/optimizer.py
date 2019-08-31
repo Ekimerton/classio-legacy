@@ -195,16 +195,23 @@ def parse_string(classes, semester, school, score_params):
 
 
 def parse_timetables(timetable_list):
+    days_list = []
     for entry in timetable_list:
-        create_calendar(entry['classes'])
+        days_list.append(create_calendar(entry['classes']))
+    return days_list
 
 # TODO Creates a calender for one timetable
 
 
 def create_calendar(class_list):
     flat_list = [item for sublist in class_list for item in sublist]
-    day_list = []
+    day_list = [[], [], [], [], []]
     day_map = {'Mo': 0, 'Tu': 1, 'We': 2, 'Th': 3, 'Fr': 4}
     for entry in flat_list:
-        if entry in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
-            pass
+        if len(entry) != 10:
+            continue
+        if entry[:2] in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
+            day_list[day_map[entry[:2]]].append(entry[2:])
+    for day in day_list:
+        day.sort()
+    return day_list

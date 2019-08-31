@@ -36,6 +36,17 @@ body {
   color: #000000;
 }
 
+.timetable-display-selection-button {
+  background:#5dabff;
+  color:#000000;
+}
+
+.timetable-display-selection-button:hover {
+  background:#449eff;
+  color:#000000;
+}
+
+
 .m {
   background: #eec584;
 }

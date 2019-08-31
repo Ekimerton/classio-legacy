@@ -21,7 +21,10 @@ def home():
 
 
 def pretty_time(timestamp):
-    return timestamp[:2] + " " + timestamp[2:4] + ":" + timestamp[4:6] + "-" + timestamp[6:8] + ":" + timestamp[8:]
+    if len(timestamp) == 10:
+        return timestamp[:2] + " " + timestamp[2:4] + ":" + timestamp[4:6] + "-" + timestamp[6:8] + ":" + timestamp[8:]
+    elif len(timestamp) == 8:
+        return timestamp[:2] + ":" + timestamp[2:4] + "-" + timestamp[4:6] + ":" + timestamp[6:8]
 
 
 @main.route("/<string:university>", methods=['GET', 'POST'])
@@ -29,6 +32,8 @@ def search(university):
     uni_dict = {'queens': "Queen's University",
                 'waterloo': 'University of Waterloo',
                 'ubc': 'University of British Columbia'}
+    day_dict = {1: 'Monday', 2: 'Tuesday',
+                3: 'Wednesday', 4: 'Thursday', 5: 'Friday'}
     classes = request.args.get("classes", type=str)
     semester = request.args.get("semester", type=str)
     lunch = request.args.get("l", type=int)
@@ -61,8 +66,8 @@ def search(university):
                 clean_classes, semester, university, score_params)
             num_of_entries = len(class_list)
             class_list = class_list[:100]
-            # optimizer.parse_timetables(class_list)
-            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=num_of_entries, pretty_time=pretty_time, round=round)
+            days_list = optimizer.parse_timetables(class_list)
+            return render_template("search.html", university=uni_dict[university], semester=semester, form=form, class_list=class_list, ledger=ledger, len=num_of_entries, pretty_time=pretty_time, round=round, days_list=days_list, day_dict=day_dict)
         form.lunch_start.data = datetime.time(11, 30)
         form.lunch_end.data = datetime.time(13, 30)
         form.dinner_start.data = datetime.time(18, 30)
