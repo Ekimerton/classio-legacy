@@ -1,20 +1,74 @@
-<p> Home sweet home </p>
-<form method="POST" action="">
-  {{ form.hidden_tag() }}
-  <fieldset>
-    <div>
-      {{ form.name.label }}
-      {% if form.name.errors %}
-      {{ form.name }}
-      <div>
-        {% for error in form.name.errors %}
-        <span>{{ error }}</span>
-        {% endfor %}
-      </div>
-      {% else %}
-      {{ form.name }}
-      {% endif %}
-    </div>
-  </fieldset>
-  {{ form.submit }}
-</form>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="icon" type="image/png" href="{{url_for('static', filename='favicon.png')}}" />
+  <!-- Search by Google -->
+  <meta name="google-site-verification" content="2idKE5RPm7i1P9Kap980iC3yIGez3Pr9NdZOws-W9l4" />
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146918639-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-146918639-1');
+  </script>
+
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>classio - Home</title>
+  <meta name="description" content="An easy way to create timetables!">
+  <meta name="keywords" content="optimize, web app, waterloo, queens, ubc, university, timetable, class">
+  <meta name="author" content="Ekim Karabey">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}" />
+
+  <!-- Bootstrap & Dependancies -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="jumbotron container mt-4" style="background:#ffffff">
+    <h1 class='text-center'> classio </h1>
+    <h4 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a>
+      with ❤️</h4>
+    <h5 class='text-center'> <a> credits </a> • <a> about </a> • <a href="https://github.com/Ekimerton/classio"> github
+      </a> </h5>
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+      <fieldset>
+        <div class="row">
+          <div class="form-group col">
+            {{ form.name.label(class="form-control-label")}}
+            {% if form.name.errors %}
+            {{ form.name(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.name.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            {{ form.name(class="form-control form-control-lg") }}
+            {% endif %}
+          </div>
+        </div>
+      </fieldset>
+      {{ form.submit(class="btn btn-dark mb-3 btn-block") }}
+    </form>
+  </div>
+</body>
+
+</html>

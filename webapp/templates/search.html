@@ -6,10 +6,24 @@
   <!-- Search by Google -->
   <meta name="google-site-verification" content="2idKE5RPm7i1P9Kap980iC3yIGez3Pr9NdZOws-W9l4" />
 
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146918639-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-146918639-1');
+  </script>
+
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>classio</title>
+  <title>classio - {{university}}</title>
+  <meta name="description" content="An easy way for {{university}} students to create timetables!">
+  <meta name="keywords" content="optimize, web app, waterloo, queens, ubc, university, timetable, class">
+  <meta name="author" content="Ekim Karabey">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}" />
@@ -30,8 +44,8 @@
   <div class="jumbotron container mt-4" style="background:#ffffff">
     <div class="text-center mb-3" id="intro">
       <h1 class='text-center'> <a href="{{url_for('main.home')}}"> classio</a> • {{university}} </h1>
-      <h3 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a>
-        with ❤️</h3>
+      <h4 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a>
+        with ❤️</h4>
       <small> Found a bug? Have an idea for a new feature? <a
           href="https://docs.google.com/forms/d/1FNYSnC7lkeZQt-3fw_PotWnGe5q40A5vKZaJDMRs5b4/edit"> Let me know! </a>
       </small>

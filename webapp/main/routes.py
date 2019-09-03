@@ -9,7 +9,7 @@ main = Blueprint('main', __name__)
 
 @main.route("/", methods=['GET', 'POST'])
 def default():
-    return redirect(url_for('main.search', university="queens"))
+    return redirect(url_for('main.home'))
 
 
 @main.route("/home", methods=['GET', 'POST'])
