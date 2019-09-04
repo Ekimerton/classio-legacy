@@ -45,7 +45,8 @@
     <h1 class='text-center'> classio </h1>
     <h4 class='text-center'> Made by <a href='https://www.linkedin.com/in/ekim-karabey-b94098175/'>Ekim Karabey</a>
       with ❤️</h4>
-    <h5 class='text-center'> <a> credits </a> • <a> about </a> • <a href="https://github.com/Ekimerton/classio"> github
+    <h5 class='text-center'> <a href="{{ url_for('main.faq')}}"> FAQ </a> • <a href="{{ url_for('main.about')}}"> About
+      </a> • <a href="https://github.com/Ekimerton/classio"> Github
       </a> </h5>
     <form method="POST" action="">
       {{ form.hidden_tag() }}

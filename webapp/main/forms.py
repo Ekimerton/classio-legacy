@@ -27,7 +27,7 @@ def check_time(form, field):
 class SchoolForm(FlaskForm):
     schools = [('queens', "Queen's University"), ('waterloo',
                                                   'University of Waterloo'), ('ubc', 'University of British Columbia')]
-    name = SelectField('Select your school', validators=[
+    name = SelectField('Select your school:', validators=[
                        DataRequired()], choices=schools)
     submit = SubmitField('Continue')
 

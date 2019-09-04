@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" type="image/png" href="{{url_for('static', filename='favicon.png')}}" />
+    <!-- Search by Google -->
+    <meta name="google-site-verification" content="2idKE5RPm7i1P9Kap980iC3yIGez3Pr9NdZOws-W9l4" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146918639-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-146918639-1');
+    </script>
+
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>classio - FAQ</title>
+    <meta name="description" content="An easy way to create timetables!">
+    <meta name="keywords" content="optimize, web app, waterloo, queens, ubc, university, timetable, class">
+    <meta name="author" content="Ekim Karabey">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}" />
+
+    <!-- Bootstrap & Dependancies -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh3U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="jumbotron container mt-4" style="background:#ffffff">
+        <h1 class='text-center mb-5'> <a href="{{url_for('main.home')}}"> classio</a> • FAQ </h1>
+        <p>
+            <font size="+0"> If you have questions about technical info refer to the
+                <a href="{{url_for('main.about')}}">
+                    About
+                </a> page.
+            </font>
+        </p>
+        <h4> What is classio? </h4>
+        <p>
+            <font size="+0">
+                Classio is an app that helps you pick classes. All you do is pick your university and enter your class
+                codes!
+            </font>
+        </p>
+        <h4> How do I get in touch if I have an idea for a feature or if I find a bug? </h4>
+        <p>
+            <font size="+0">
+                You can leave anonymous feedback <a
+                    href="https://docs.google.com/forms/d/1FNYSnC7lkeZQt-3fw_PotWnGe5q40A5vKZaJDMRs5b4/edit"> here.</a>
+            </font>
+        </p>
+        <h4> What does the percentage in my results mean? </h4>
+        <p>
+            <font size="+0">
+                The percent is a score, calculated using the factors you care about. (By default those factors are
+                lunches missed, dinners missed and time wasted between classes) You can change how much you care about
+                each factor in <i> Advanced Settings</i>.
+            </font>
+        </p>
+        <h4> What "Early/Midday/Late/Mixed" mean? </h4>
+        <p>
+            <font size="+0">
+                Early means classes start between 11:30 on most days of the week. Midday means classes start between
+                11:30 and 4:30. Late means classes start after 4:30. Mixed means most days of the week have a starting
+                time and an ending time far apart from each other.
+            </font>
+        </p>
+        <h4> What does it mean if I get 0 results back? </h4>
+        <p>
+            <font size="+0">
+                0 results could mean a lot of things. Firstly, your entry might be formatted incorrectly, so the app
+                might not have found the class times. It could also be that there are no combinations in which the
+                classes you entered work together.
+            </font>
+        </p>
+        <h4> I got a heroku error, what does this mean? </h4>
+        <p>
+            <font size="+0">
+                A heroku error occurs if your results take more than 30 seconds to be generated (eg. if you enter too
+                many classes). Sadly, the only solution to this is running classio locally, which you can do by
+                downloading it <a href="https://github.com/Ekimerton/classio"> here. </a> If you'd like a step-by-step
+                on how to run classio locally, refer to the repository's <a
+                    href="https://github.com/Ekimerton/classio/blob/master/README.md"> README. </a>
+            </font>
+        </p>
+    </div>
+</body>
+
+</html>
