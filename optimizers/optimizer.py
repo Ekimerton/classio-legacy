@@ -200,7 +200,7 @@ def parse_timetables(timetable_list):
         days_list.append(create_calendar(entry['classes']))
     return days_list
 
-# TODO Creates a calender for one timetable
+# TODO Creates a calender fors one timetable
 
 
 def create_calendar(class_list):
@@ -215,3 +215,6 @@ def create_calendar(class_list):
     for day in day_list:
         day.sort()
     return day_list
+
+def eliminate_sleep(class_list):
+    pass
