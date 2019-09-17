@@ -41,6 +41,7 @@ def search(university):
     offtime = request.args.get('o', type=int)
     lunch_time = request.args.get("lunch", type=str)
     dinner_time = request.args.get("dinner", type=str)
+    wake_up = request.args.get("wake_up", type=int)
     if university in ['queens', 'waterloo', 'ubc']:
         form = ClassForm()
         if form.validate_on_submit():
@@ -51,15 +52,18 @@ def search(university):
                 utils.pad_hour(form.dinner_end.data.hour) + \
                 utils.pad_hour(form.dinner_end.data.minute)
             classes = form.classes.data
+            wake_time = utils.pad_hour(
+                form.wake_up.data.hour) + utils.pad_hour(form.wake_up.data.minute)
             if classes:
-                return redirect(url_for('main.search', university=university, semester=form.semester.data, classes=classes, l=form.lunch.data, d=form.dinner.data, o=form.offtime.data, lunch=lunch_time, dinner=dinner_time))
+                return redirect(url_for('main.search', university=university, semester=form.semester.data, classes=classes, l=form.lunch.data, d=form.dinner.data, o=form.offtime.data, lunch=lunch_time, dinner=dinner_time, wake_up=wake_time))
         if classes:
             form.lunch_start.data = datetime.time(11, 30)
             form.lunch_end.data = datetime.time(13, 30)
             form.dinner_start.data = datetime.time(18, 30)
             form.dinner_end.data = datetime.time(20, 30)
+            form.wake_up.data = datetime.time(7, 30)
             score_params = {'lunch': lunch/100, 'dinner': dinner/100,
-                            'offtime': offtime/100, 'lunch_time': lunch_time, 'dinner_time': dinner_time}
+                            'offtime': offtime/100, 'lunch_time': lunch_time, 'dinner_time': dinner_time, 'sleep': wake_up}
             clean_classes = classes.replace(" ", "")
             clean_classes = clean_classes.upper()
             ledger, class_list = optimizer.parse_string(
@@ -72,6 +76,7 @@ def search(university):
         form.lunch_end.data = datetime.time(13, 30)
         form.dinner_start.data = datetime.time(18, 30)
         form.dinner_end.data = datetime.time(20, 30)
+        form.wake_up.data = datetime.time(7, 30)
         return render_template("search.html", university=uni_dict[university], form=form)
     else:
         abort(404)

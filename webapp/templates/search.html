@@ -15,8 +15,6 @@
 
     gtag('config', 'UA-146918639-1');
   </script>
-
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -155,7 +153,7 @@
                 {% endfor %}
               </div>
               {% else %}
-              {{ form.lunch_start(class="form-control form-control-lg col") }}
+              {{ form.lunch_start(class="form-control form-control-lg col text-center") }}
               {% endif %}
               <div class="col-auto">
                 <h2> - </h2>
@@ -168,7 +166,7 @@
                 {% endfor %}
               </div>
               {% else %}
-              {{ form.lunch_end(class="form-control form-control-lg col") }}
+              {{ form.lunch_end(class="form-control form-control-lg col text-center") }}
               {% endif %}
             </div>
           </div>
@@ -184,7 +182,7 @@
                 {% endfor %}
               </div>
               {% else %}
-              {{ form.dinner_start(class="form-control form-control-lg col") }}
+              {{ form.dinner_start(class="form-control form-control-lg col text-center") }}
               {% endif %}
               <div class="col-auto">
                 <h2> - </h2>
@@ -197,11 +195,27 @@
                 {% endfor %}
               </div>
               {% else %}
-              {{ form.dinner_end(class="form-control form-control-lg col") }}
+              {{ form.dinner_end(class="form-control form-control-lg col text-center") }}
               {% endif %}
-              <div>
-              </div>
             </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col text-center">
+              {{ form.wake_up.label(class="form-control-label col")}}
+            </div>
+            {% if form.wake_up.errors %}
+            {{ form.wake_up(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+              {% for error in form.wake_up.errors %}
+              <span>{{ error }}</span>
+              {% endfor %}
+            </div>
+            {% else %}
+            {{ form.wake_up(class="form-control form-control-lg col-auto text-center") }}
+            {% endif %}
+          </div>
+        </div>
       </fieldset>
       {{ form.submit(class="btn btn-dark mb-3 btn-block") }}
     </form>
@@ -215,8 +229,7 @@
         </br>
         <b> New:</b> Calendar-style class times!
         </br>
-        </br>
-        <b> Upcoming:</b> Wake up times!
+        <b> New:</b> Wake up times!
       </small> </p>
     </br>
     <p class='text-center'> <a href="{{ url_for('main.faq')}}"> FAQ </a> • <a href="{{ url_for('main.about')}}"> About

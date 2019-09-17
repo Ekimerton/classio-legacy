@@ -143,6 +143,8 @@ def analyze_timetable(timetable, params):
             day_dict[day].sort()
             # Checks if day is m/a/e/x
             start = int(day_dict[day][0][:4])
+            if start <= params['sleep']:
+                return None
             end = int(day_dict[day][len(day_dict[day])-1][4:])
             day_len = end - start
             if day_len > 500:
@@ -181,13 +183,17 @@ def parse_string(classes, semester, school, score_params):
     return_list = []
     for l in valid_list:
         try:
+            analysis = analyze_timetable(l, score_params)
+            if not analysis:
+                continue
             return_list.append(
-                {'classes': l, 'stats': analyze_timetable(l, score_params)})
+                {'classes': l, 'stats': analysis})
         except Exception as e:
             print(e)
     # Sort by score
     return_list = sorted(return_list, key=lambda i: i['stats']['score'])
     return ledger, return_list
+
 
 # Part for creating a calendar view
 
@@ -215,6 +221,3 @@ def create_calendar(class_list):
     for day in day_list:
         day.sort()
     return day_list
-
-def eliminate_sleep(class_list):
-    pass

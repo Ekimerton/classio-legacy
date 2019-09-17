@@ -53,5 +53,7 @@ class ClassForm(FlaskForm):
         "At what time would you like to eat dinner?", validators=[DataRequired()])
     dinner_end = TimeField(
         "At what time would you like to eat dinner?", validators=[DataRequired()])
+    wake_up = TimeField(
+        "At what time would you like your day to start?", validators=[DataRequired()])
 
     submit = SubmitField('Optimize')
