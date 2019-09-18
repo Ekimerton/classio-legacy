@@ -7,7 +7,7 @@ class Config:
         SECRET_KEY = os.environ['SECRET_KEY']
     except:
         SECRET_KEY = 'test'
-    DEBUG = True
+    	DEBUG = True
     # Database
     #SQLALCHEMY_DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
     #SQLALCHEMY_TRACK_MODIFICATIONS = os.environ['SQLALCHEMY_TRACK_MODIFICATIONS']
