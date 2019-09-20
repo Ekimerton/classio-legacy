@@ -129,6 +129,3 @@ def find_class(semester, course):
             else:
                 variable_times.append(time_section)
         return Course(course, semester, constant_times, variable_times)
-
-
-find_class('F', "CS245")

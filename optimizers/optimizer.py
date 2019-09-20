@@ -6,7 +6,11 @@ import optimizers.parse_class as parse_class
 
 def is_conflicted(list1, list2):
     for time1 in list1:
+        if not time1[:2] in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
+            continue
         for time2 in list2:
+            if not time2[:2] in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
+                continue
             # If the days are different, they don't overlap for certain
             if time1[:2] == time2[:2]:
                 # time1end > time2start AND time2end > time1start, checks if ranges overlap
@@ -24,6 +28,8 @@ def is_free(day_list, start_time, end_time):
     return True
 
 # True means no conflicts, false means there is conflicts
+
+# this is broken i think
 
 
 def check_timetable(timetable):

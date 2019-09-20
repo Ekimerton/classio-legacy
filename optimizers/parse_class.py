@@ -101,19 +101,19 @@ def searchClass(name, semester, school):
             courses = session.query(CourseDB).filter_by(
                 name=name, semester=semester).first()
             class_list.append(parseClass(courses))
-        except:
+        except Exception as e:
             pass
         try:
             courses = session.query(CourseDB).filter_by(
                 name=name+'A', semester=semester).first()
             class_list.append(parseClass(courses))
-        except:  # Exception as e:
+        except Exception as e:  # except Exception as eion as e:
             pass
         try:
             courses = session.query(CourseDB).filter_by(
                 name=name+'B', semester=semester).first()
             class_list.append(parseClass(courses))
-        except:
+        except Exception as e:
             pass
         session.close()
         for cls in class_list:
@@ -125,7 +125,7 @@ def searchClass(name, semester, school):
             result = waterloo.find_class(semester, name)
             if result:
                 class_list.append(result)
-        except:
+        except Exception as e:
             pass
         for cls in class_list:
             cls.variable_times = mergeClasses(cls.variable_times)
@@ -136,7 +136,7 @@ def searchClass(name, semester, school):
             result = ubc.find_class(semester, name)
             if result:
                 class_list.append(result)
-        except:
+        except Exception as e:
             pass
         for cls in class_list:
             cls.variable_times = mergeClasses(cls.variable_times)
@@ -230,10 +230,10 @@ def parse_request(request_string, semester, school):
                         ":") + 1:]
                     class_param = {'section': section_type, 'class': class_num}
                     class_params.append(class_param)
-                except:
+                except Exception as e:
                     pass
             class_string = class_string[:class_string.index('(')]
-        except:
+        except Exception as e:
             pass
         results = searchClass(class_string, semester, school)
         for result in results:
