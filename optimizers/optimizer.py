@@ -2,8 +2,6 @@ import itertools
 import optimizers.parse_class as parse_class
 
 # Checks if two classes have conflicting ranges, turns out this is a hard problem! (medium more like haha!!!!!! xdddddD)
-
-
 def is_conflicted(list1, list2):
     for time1 in list1:
         if not time1[:2] in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
@@ -19,8 +17,6 @@ def is_conflicted(list1, list2):
     return False
 
 # Checks to see if a list of times is free during a time, eg between 11301230 for lunch.
-
-
 def is_free(day_list, start_time, end_time):
     for timeframe in day_list:
         if timeframe[4:] > end_time and start_time > timeframe[:4]:
@@ -28,10 +24,6 @@ def is_free(day_list, start_time, end_time):
     return True
 
 # True means no conflicts, false means there is conflicts
-
-# this is broken i think
-
-
 def check_timetable(timetable):
     for i in range(len(timetable)):
         for j in range(i + 1, len(timetable)):
@@ -40,8 +32,6 @@ def check_timetable(timetable):
     return True
 
 # Calculates the amount of time in between classes for a day
-
-
 def calculate_offtime(day):
     offtime = 0
     endh = day[0][:2]
@@ -55,8 +45,6 @@ def calculate_offtime(day):
     return offtime
 
 # Returns all possible permutations
-
-
 def get_permutations(classes, semester, school):
     resp = parse_class.parse_request(classes, semester, school)
     constant_times = []
@@ -128,8 +116,6 @@ def check_timeframe(timetable, timeframe):
     return False
 
 # Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
-
-
 def analyze_timetable(timetable, params):
     # First flatten
     flat_list = flatten_table(timetable)
@@ -195,7 +181,7 @@ def parse_string(classes, semester, school, score_params):
             return_list.append(
                 {'classes': l, 'stats': analysis})
         except Exception as e:
-            print(e)
+            pass
     # Sort by score
     return_list = sorted(return_list, key=lambda i: i['stats']['score'])
     return ledger, return_list
@@ -204,8 +190,6 @@ def parse_string(classes, semester, school, score_params):
 # Part for creating a calendar view
 
 # Creates a calender for each timetable
-
-
 def parse_timetables(timetable_list):
     days_list = []
     for entry in timetable_list:
@@ -213,8 +197,6 @@ def parse_timetables(timetable_list):
     return days_list
 
 # TODO Creates a calender fors one timetable
-
-
 def create_calendar(class_list):
     flat_list = [item for sublist in class_list for item in sublist]
     day_list = [[], [], [], [], []]

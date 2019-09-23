@@ -211,8 +211,6 @@ def narrow_result(cls, params):
                         break
                 if not name_exits:
                     narrow_variable_times.append(section)
-    print(narrow_constant_times)
-    print(narrow_variable_times)
     return Course(cls.name, cls.semester, narrow_constant_times, narrow_variable_times)
 
 
