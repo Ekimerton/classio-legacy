@@ -98,7 +98,6 @@ def addMinutes(time, minutes):
         minute = '0' + minute
     return hour + minute
 
-
 def check_timeframe(timetable, timeframe):
     start_time = timeframe[:4]
     end_time = timeframe[4:]
