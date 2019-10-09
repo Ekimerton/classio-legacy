@@ -65,7 +65,6 @@ def get_permutations(classes, semester, school):
                 times = entry[1:]
                 variable_times.append(times)
                 variable_sections.append(response.name + ":" + type)
-
     ledger = constant_sections + variable_sections
     permutations = []
     for i in list(itertools.product(*variable_times)):
@@ -73,14 +72,12 @@ def get_permutations(classes, semester, school):
         permutations.append(schedule)
     return ledger, permutations
 
-
 def flatten_table(timetable):
     flat_list = []
     for sublist in timetable:
         for item in range(1, len(sublist)):
             flat_list.append(sublist[item])
     return flat_list
-
 
 def addMinutes(time, minutes):
     hour = int(time[:2])
@@ -111,7 +108,6 @@ def check_timeframe(timetable, timeframe):
         if free_count >= 3:
             return True
         start_time = addMinutes(start_time, 10)
-
     return False
 
 # Things to look for: Lunch free, dinner free, morning/afternoon/evening/mixed, downtime between classes
@@ -164,7 +160,6 @@ def analyze_timetable(timetable, params):
         5*(5 - lunch_free) + params['dinner']*5*(5 - dinner_free)
     return {'score': score, 'day_type': day_type, 'lunch': lunch_free, 'dinner': dinner_free, 'time_off': round(time_in_between, 2)}
 
-
 def parse_string(classes, semester, school, score_params):
     ledger, permutations = get_permutations(classes, semester, school)
     valid_list = []
@@ -185,9 +180,7 @@ def parse_string(classes, semester, school, score_params):
     return_list = sorted(return_list, key=lambda i: i['stats']['score'])
     return ledger, return_list
 
-
 # Part for creating a calendar view
-
 # Creates a calender for each timetable
 def parse_timetables(timetable_list):
     days_list = []
@@ -195,7 +188,7 @@ def parse_timetables(timetable_list):
         days_list.append(create_calendar(entry['classes']))
     return days_list
 
-# TODO Creates a calender fors one timetable
+# Creates a calender for one timetable
 def create_calendar(class_list):
     flat_list = [item for sublist in class_list for item in sublist]
     day_list = [[], [], [], [], []]
