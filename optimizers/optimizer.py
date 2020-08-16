@@ -157,7 +157,7 @@ def analyze_timetable(timetable, params):
     day_type = max(set(day_types), key=day_types.count)
     # Score works fine, but I'd like to improve it.
     score = params['offtime']*2*time_in_between + params['lunch'] * \
-        5*(5 - lunch_free) + params['dinner']*5*(5 - dinner_free)
+            5*(5 - lunch_free) + params['dinner']*5*(5 - dinner_free)
     return {'score': score, 'day_type': day_type, 'lunch': lunch_free, 'dinner': dinner_free, 'time_off': round(time_in_between, 2)}
 
 def parse_string(classes, semester, school, score_params):
@@ -173,7 +173,7 @@ def parse_string(classes, semester, school, score_params):
             if not analysis:
                 continue
             return_list.append(
-                {'classes': l, 'stats': analysis})
+                    {'classes': l, 'stats': analysis})
         except Exception as e:
             pass
     # Sort by score

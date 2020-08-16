@@ -10,9 +10,11 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 # TODO: Change scraper to scrape all classes, open or closed!
-#Setup
+# Setup
 
 # Helper Methods
+
+
 def hour12to24(timestamp):
     ep_index = timestamp.index(":")
     hour = int(timestamp[:ep_index])
@@ -26,6 +28,7 @@ def hour12to24(timestamp):
         hour = "0" + str(hour)
     return str(hour) + minute
 
+
 def standardizeTime(init_time):
     stnd_time = ""
     bits = init_time.split(", ")
@@ -33,14 +36,15 @@ def standardizeTime(init_time):
         day_string = bit[:2]
         day_list = []
         while day_string in ['Mo', 'Tu', 'We', 'Th', 'Fr']:
-             day_list.append(day_string)
-             bit = bit[2:]
-             day_string = bit[:2]
+            day_list.append(day_string)
+            bit = bit[2:]
+            day_string = bit[:2]
 
         first_hour = bit[:bit.index('-')]
         last_hour = bit[bit.index('-') + 1:]
         for day in day_list:
-            stnd_time = stnd_time + day + hour12to24(first_hour) + hour12to24(last_hour) + ","
+            stnd_time = stnd_time + day + \
+                hour12to24(first_hour) + hour12to24(last_hour) + ","
 
     if not stnd_time:
         return None
@@ -48,6 +52,8 @@ def standardizeTime(init_time):
 
     # SQL/SQLite model classes
 Base = declarative_base()
+
+
 class Course(Base):
     __tablename__ = "course"
     id = Column('id', Integer, primary_key=True)
@@ -64,27 +70,27 @@ session = Session()
 
 # start index
 start = int(input("Enter the last number that was parsed: "))
-semester = input("Fall or Winter? (2019/2020): ")
+semester = input("Fall or Winter? (2020/2021): ")
 
 if not semester in ['Fall', 'Winter']:
     print("Please enter 'Fall' or 'Winter'")
     exit()
 else:
     if semester == 'Fall':
-        year = '2019 '
-    elif semester == 'Winter':
         year = '2020 '
-
+    elif semester == 'Winter':
+        year = '2021 '
 
     # Firefox profile that ignores (not CSS), images and flash since this browser is used for scraping only.
 firefoxProfile = FirefoxProfile()
 firefoxProfile.set_preference('permissions.default.image', 2)
-firefoxProfile.set_preference('dom.ipc.plugins.enabled.libflashplayer.so','false')
+firefoxProfile.set_preference(
+    'dom.ipc.plugins.enabled.libflashplayer.so', 'false')
 browser = webdriver.Firefox(firefoxProfile)
 
 # Selenium Driver run
 
-    # Login Stuff
+# Login Stuff
 browser.get("https://my.queensu.ca/")
 wait = WebDriverWait(browser, 30)
 
@@ -95,16 +101,18 @@ element.send_keys(os.environ['QUEENS_PASSWORD'])
 element = browser.find_element_by_name('_eventId_proceed')
 element.click()
 
-    # Goes to course search
+# Goes to course search
 flip_flop = True
 i = start
-while i < 144: #Replace this 136 with a dynamic range (144 for fall, 143 for winter)
+# Replace this 136 with a dynamic range (144 for fall, 143 for winter)
+while i < 144:
 
     browser.get("https://saself.ps.queensu.ca/psc/saself/EMPLOYEE/SA/c/SA_LEARNER_SERVICES.CLASS_SEARCH.GBL?Page=SSR_CLSRCH_ENTRY&Action=U")
     wait = WebDriverWait(browser, 30)
 
     # Semester Selection
-    element = wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_STRM$35$')))
+    element = wait.until(EC.presence_of_element_located(
+        (By.ID, 'CLASS_SRCH_WRK2_STRM$35$')))
     option = element.find_elements_by_tag_name('option')
     if option != year + semester:
         for option in element.find_elements_by_tag_name('option'):
@@ -112,7 +120,7 @@ while i < 144: #Replace this 136 with a dynamic range (144 for fall, 143 for win
                 option.click()
                 break
 
-        #REPLACING THIS WOULD MAKE THIS MUCH MUCH QUICKER
+        # REPLACING THIS WOULD MAKE THIS MUCH MUCH QUICKER
         time.sleep(7)
 
     # Set subject type
@@ -122,7 +130,7 @@ while i < 144: #Replace this 136 with a dynamic range (144 for fall, 143 for win
         if count == i:
             option.click()
             print(option.text + ": " + str(i))
-        count+=1
+        count += 1
     # Set search options
     element = browser.find_element_by_id('SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1')
     element.send_keys("c")
@@ -142,11 +150,12 @@ while i < 144: #Replace this 136 with a dynamic range (144 for fall, 143 for win
 
     # Hot-fix for classes who have more than 200 sections.
     hot_fix = [5]
-    split_point = {5:'150'}
+    split_point = {5: '150'}
     if i in hot_fix:
         element = browser.find_element_by_id('SSR_CLSRCH_WRK_CATALOG_NBR$1')
         element.send_keys(split_point[i])
-        element = browser.find_element_by_id('SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1')
+        element = browser.find_element_by_id(
+            'SSR_CLSRCH_WRK_SSR_EXACT_MATCH1$1')
         if flip_flop:
             element.send_keys("l")
             i = i - 1
@@ -154,45 +163,52 @@ while i < 144: #Replace this 136 with a dynamic range (144 for fall, 143 for win
             element.send_keys("g")
 
         flip_flop = not flip_flop
-    i+= 1
+    i += 1
     # Click search
     element = browser.find_element_by_id('CLASS_SRCH_WRK2_SSR_PB_CLASS_SRCH')
     element.click()
 
     try:
         wait = WebDriverWait(browser, 15)
-        wait.until(EC.presence_of_element_located((By.ID, 'CLASS_SRCH_WRK2_SSR_PB_MODIFY$5$')))
+        wait.until(EC.presence_of_element_located(
+            (By.ID, 'CLASS_SRCH_WRK2_SSR_PB_MODIFY$5$')))
         print("    read successfully")
     except:
         if ("The search returns no results that match the criteria specified." in browser.page_source):
             print("    returned no results")
             continue
         else:
-            print("    Unknown error, query returned neither a proper page nor a 'not found'")
+            print(
+                "    Unknown error, query returned neither a proper page nor a 'not found'")
             exit()
 
     for classDiv in browser.find_elements_by_xpath("//div[starts-with(@id,'win0divSSR_CLSRSLT_WRK_GROUPBOX2$')]"):
         title = classDiv.find_element_by_tag_name('a').get_attribute('title')
         title = "".join(title[17:title.index(" -")].split())
-        sections = classDiv.find_elements_by_xpath(".//tr[starts-with(@id,'trSSR_CLSRCH_MTG1$')]")
+        sections = classDiv.find_elements_by_xpath(
+            ".//tr[starts-with(@id,'trSSR_CLSRCH_MTG1$')]")
         sectionID_tag = "xxx"
         times = ""
         try:
             for section in sections:
                 old_sectionID_tag = sectionID_tag
-                sectionID = section.find_element_by_xpath(".//a[starts-with(@id,'MTG_CLASSNAME$')]").get_attribute("innerHTML")
+                sectionID = section.find_element_by_xpath(
+                    ".//a[starts-with(@id,'MTG_CLASSNAME$')]").get_attribute("innerHTML")
                 sectionID = sectionID[0:sectionID.index('<')]
                 sectionID_tag = sectionID[(sectionID.index('-') + 1):]
                 if sectionID_tag != old_sectionID_tag:
                     times = times[:len(times) - 1]
                     times += "-" + sectionID_tag + ":"
-                class_num = section.find_element_by_xpath(".//a[starts-with(@id,'MTG_CLASS_NBR$')]").text
-                timeslot = section.find_element_by_xpath(".//span[starts-with(@id,'MTG_DAYTIME$')]").text
+                class_num = section.find_element_by_xpath(
+                    ".//a[starts-with(@id,'MTG_CLASS_NBR$')]").text
+                timeslot = section.find_element_by_xpath(
+                    ".//span[starts-with(@id,'MTG_DAYTIME$')]").text
                 timeslot = ", ".join(timeslot.splitlines())
                 timeslot = standardizeTime(timeslot)
                 times += class_num + "?" + timeslot + ";"
 
-            times = times[1:len(times) - 1] #Removes trailing '-' and leading ';'
+            # Removes trailing '-' and leading ';'
+            times = times[1:len(times) - 1]
 
 # ding to database
             constant_t = ""
@@ -211,10 +227,11 @@ while i < 144: #Replace this 136 with a dynamic range (144 for fall, 143 for win
 
             # print for testing!
             #print(title, semester[0])
-            #print(constant_t)
-            #print(variable_t)
+            # print(constant_t)
+            # print(variable_t)
             try:
-                q = session.query(Course).filter(Course.name == title, Course.semester == semester[0]).first()
+                q = session.query(Course).filter(
+                    Course.name == title, Course.semester == semester[0]).first()
                 if q.name == title and q.semester == semester[0]:
                     exists = True
                     print("       ", title, "already exists in the db")
