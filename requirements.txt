@@ -5,6 +5,6 @@ Flask_WTF==0.14.2
 gunicorn==19.9.0
 requests==2.21.0
 beautifulsoup4==4.8.0
-lxml==4.3.4
+lxml==4.6.3
 selenium==3.141.0
 WTForms-Components==0.10.4
